@@ -141,6 +141,7 @@ case $EXT in
       ghc $PROBLEM_NAME.hs -o executable -lm
     else
       echo "Error: ghc not installed" >&2
+      rm $PROBLEM_NAME.hs
       exit 1
     fi
   ;;
@@ -150,9 +151,10 @@ case $EXT in
     LANGUAGE=Java
     if command -v javac &> /dev/null; then
       COMMAND=(java "$PROBLEM_NAME")
-      javac $1
+      javac $PROBLEM_NAME.java
     else
       echo "Error: javac not installed" >&2
+      rm $PROBLEM_NAME.java
       exit 1
     fi
   ;;
@@ -165,6 +167,7 @@ case $EXT in
       g++ $PROBLEM_NAME.cpp -o executable -lm
     else
       echo "Error: g++ not installed" >&2
+      rm $PROBLEM_NAME.cpp
       exit 1
     fi
   ;;
@@ -177,6 +180,7 @@ case $EXT in
       gcc $PROBLEM_NAME.c -o executable -lm 
     else
       echo "Error: gcc not installed" >&2
+      rm $PROBLEM_NAME.c
       exit 1
     fi
   ;;
@@ -192,18 +196,20 @@ case $EXT in
       python -m py_compile $PROBLEM_NAME.py
     else
       echo "Error: python not installed" >&2
+      rm $PROBLEM_NAME.py
       exit 1
     fi
   ;;
 
 	js)
 		echo "Compiling in javascript..."		
+    LANGUAGE=Javascript
     if command -v node &> /dev/null; then
-      LANGUAGE=Javascript
       COMMAND=(node "$PROBLEM_NAME.js")
       node --check $PROBLEM_NAME.js
     else
       echo "Error: node not installed" >&2
+      rm $PROBLEM_NAME.js
       exit 1
     fi
   ;;

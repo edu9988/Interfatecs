@@ -33,13 +33,13 @@ else
 fi
 
 if [ ! -e "$ARG_FILE" ]; then
-  echo "$ARG_FILE: file not found"
+  echo "$ARG_FILE: file not found" >&2
   exit 1
 elif [ ! -f "$ARG_FILE" ]; then
-  echo "$ARG_FILE: not a regular file"
+  echo "$ARG_FILE: not a regular file" >&2
   exit 1
 elif [ ! -r "$ARG_FILE" ]; then
-  echo "$ARG_FILE: permission denied"
+  echo "$ARG_FILE: permission denied" >&2
   exit 1
 fi
 
@@ -116,7 +116,7 @@ case $PROBLEM_NAME in
 	;;
 
 	*)
-		echo "$ARG_FILE: $PROBLEM_NAME: Wrong problem name"	
+		echo "$ARG_FILE: $PROBLEM_NAME: Wrong problem name"	>&2
     echo "$ARG_FILE kept"
 		exit 1
 	;;
@@ -134,45 +134,78 @@ echo "Judging problem $PROBLEM ($PROBLEM_NAME)..."
 
 case $EXT in
 	hs)
-		echo "Compiling in haskell..."
+    echo "Compiling in haskell..."
     LANGUAGE=Haskell
-    COMMAND=(./executable)
-		ghc $PROBLEM_NAME.hs -o executable -lm
+    if command -v ghc &> /dev/null; then
+      COMMAND=(./executable)
+      ghc $PROBLEM_NAME.hs -o executable -lm
+    else
+      echo "Error: ghc not installed" >&2
+      exit 1
+    fi
   ;;
 
 	java)
 		echo "Compiling in java..."
     LANGUAGE=Java
-    COMMAND=(java "$PROBLEM_NAME")
-		javac $1
+    if command -v javac &> /dev/null; then
+      COMMAND=(java "$PROBLEM_NAME")
+      javac $1
+    else
+      echo "Error: javac not installed" >&2
+      exit 1
+    fi
   ;;
 
 	cpp)
 		echo "Compiling in C++..."		
     LANGUAGE=C++
-    COMMAND=(./executable)
-		g++ $PROBLEM_NAME.cpp -o executable -lm
+    if command -v g++ &> /dev/null; then
+      COMMAND=(./executable)
+      g++ $PROBLEM_NAME.cpp -o executable -lm
+    else
+      echo "Error: g++ not installed" >&2
+      exit 1
+    fi
   ;;
 
 	c)
 		echo "Compiling in C..."		
     LANGUAGE=C
-    COMMAND=(./executable)
-		gcc $PROBLEM_NAME.c -o executable -lm 
+    if command -v g++ &> /dev/null; then
+      COMMAND=(./executable)
+      gcc $PROBLEM_NAME.c -o executable -lm 
+    else
+      echo "Error: gcc not installed" >&2
+      exit 1
+    fi
   ;;
 
 	py)
 		echo "Compiling in python..."		
     LANGUAGE=Python
-    COMMAND=(python3 "$PROBLEM_NAME.py")
-		python3 -m py_compile $PROBLEM_NAME.py
+    if command -v python3 &> /dev/null; then
+      COMMAND=(python3 "$PROBLEM_NAME.py")
+      python3 -m py_compile $PROBLEM_NAME.py
+    elif command -v python &> /dev/null; then
+      COMMAND=(python "$PROBLEM_NAME.py")
+      python -m py_compile $PROBLEM_NAME.py
+    else
+      echo "Error: python not installed" >&2
+      exit 1
+    fi
   ;;
 
 	js)
 		echo "Compiling in javascript..."		
-    LANGUAGE=Javascript
-    COMMAND=(node "$PROBLEM_NAME.js")
-		node --check $PROBLEM_NAME.js
+    if command -v node &> /dev/null; then
+      LANGUAGE=Javascript
+      COMMAND=(node "$PROBLEM_NAME.js")
+      node --check $PROBLEM_NAME.js
+    else
+      echo "Error: node not installed" >&2
+      exit 1
+    fi
   ;;
 
 	*)
@@ -185,6 +218,7 @@ esac
 if [ $? -ne 0 ]; then
   echo
   echo "Compilation error"
+  echo "BASH_COMMAND: $BASH_COMMAND"
   if [ "$EXT" = "py" ]; then
     rm -rf __pycache__
   fi

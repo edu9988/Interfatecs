@@ -1,18 +1,20 @@
 #!/usr/bin/env bash
 
-unset $PROBLEM
-unset $PROBLEM_DIR
-unset $PROBLEM_NAME
-unset $EXT
-unset $TIME_LIMIT
-unset $INPUT_FILE
-unset $OUTPUT_FILE
-unset $LANGUAGE
-unset $TESTSET_PATH
-unset $AUX
-unset $COMMAND
-unset $KEEP
-unset $ARG_FILE
+unset PROBLEM
+unset PROBLEM_DIR
+unset PROBLEM_NAME
+unset EXT
+unset TIME_LIMIT
+unset INPUT_FILE
+unset OUTPUT_FILE
+unset LANGUAGE
+unset TESTSET_PATH
+unset BASENAME
+unset COMMAND
+unset KEEP
+unset ARG_FILE
+unset DOTS
+unset DOTS_COUNT
 
 if [ "$#" -eq "1" ]; then
   KEEP=false
@@ -43,10 +45,23 @@ elif [ ! -r "$ARG_FILE" ]; then
   exit 1
 fi
 
-TESTSET_PATH=${0%%judge.sh}
-EXT=${ARG_FILE##*.}
-AUX=${ARG_FILE##*/}       #removes path from input file
-PROBLEM_NAME=${AUX%%.*}   #removes extension from input file
+TESTSET_PATH=$(dirname "$0")      #TESTSET_PATH=${0%%judge.sh}
+BASENAME=$(basename "$ARG_FILE")       #BASENAME=${ARG_FILE##*/}
+EXT=${BASENAME##*.}
+PROBLEM_NAME=${BASENAME%%.*}         #removes extension from input file
+
+DOTS=${BASENAME//[^.]}
+DOTS_COUNT=${#DOTS}
+
+if [ $DOTS_COUNT -eq 0 ]; then
+  echo "$ARG_FILE: file extension not found" >&2
+  echo "$ARG_FILE kept"
+  exit 1
+elif [ $DOTS_COUNT -gt 1 ]; then
+  echo "$ARG_FILE: multiple extensions not allowed" >&2
+  echo "$ARG_FILE kept"
+  exit 1
+fi
 
 case $PROBLEM_NAME in 
 	themayans) 
@@ -124,12 +139,12 @@ esac
 
 if [ "$KEEP" = "false" ]; then
   echo "WARNING: This will remove $ARG_FILE"
-  mv $ARG_FILE $TESTSET_PATH$PROBLEM_DIR
+  mv "$ARG_FILE" "$TESTSET_PATH"/$PROBLEM_DIR
 elif [ "$KEEP" = "true" ]; then
   echo "Keeping $ARG_FILE"
-  cp $ARG_FILE $TESTSET_PATH$PROBLEM_DIR
+  cp "$ARG_FILE" "$TESTSET_PATH"/$PROBLEM_DIR
 fi
-cd $TESTSET_PATH$PROBLEM_DIR
+cd "$TESTSET_PATH"/$PROBLEM_DIR
 echo "Judging problem $PROBLEM ($PROBLEM_NAME)..."
 
 case $EXT in
@@ -186,7 +201,7 @@ case $EXT in
   ;;
 
 	py)
-		echo "Compiling in python..."		
+		echo "Running python pre-execution checks (this step is analogous to compilation)..."		
     LANGUAGE=Python
     if command -v python3 &> /dev/null; then
       COMMAND=(python3 "$PROBLEM_NAME.py")
@@ -202,7 +217,7 @@ case $EXT in
   ;;
 
 	js)
-		echo "Compiling in javascript..."		
+		echo "Running javascript pre-execution checks (this step is analogous to compilation)..."		
     LANGUAGE=Javascript
     if command -v node &> /dev/null; then
       COMMAND=(node "$PROBLEM_NAME.js")
@@ -215,8 +230,8 @@ case $EXT in
   ;;
 
 	*)
-		echo "$ARG_FILE: $EXT: unsupported file extension"	
-    rm $PROBLEM_NAME.$EXT
+		echo "$ARG_FILE: $EXT: unsupported file extension" >&2
+    rm $BASENAME
     exit 1
 	;;
 esac
@@ -224,7 +239,6 @@ esac
 if [ $? -ne 0 ]; then
   echo
   echo "Compilation error"
-  echo "BASH_COMMAND: $BASH_COMMAND"
   if [ "$EXT" = "py" ]; then
     rm -rf __pycache__
   fi
@@ -232,90 +246,82 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-echo "Compilation finished. Press enter to run..."		
-read
+echo "Compilation finished. Press enter to run..."
+read -r
 echo "Executing in $LANGUAGE. Time limit: $TIME_LIMIT sec"		
 
-for INPUT_FILE in in/*
-  do
-    OUTPUT_FILE=${INPUT_FILE//in/out}
+for INPUT_FILE in in/*; do
+  OUTPUT_FILE=${INPUT_FILE//in/out}
 
-    start=`date +%s`
-    "${COMMAND[@]}" < "$INPUT_FILE" > user_answer
-    end=`date +%s`
+  start=$(date +%s)
+  "${COMMAND[@]}" < "$INPUT_FILE" > user_answer
+  end=$(date +%s)
 
-    runtime=$((end-start))
-    if [ $TIME_LIMIT -lt $runtime ]; then
-      echo "Time limit exceeded: $runtime sec"
+  runtime=$((end-start))
+  if [ $TIME_LIMIT -lt $runtime ]; then
+    echo "Time limit exceeded: $runtime sec"
+    break
+  fi
+  diff "$OUTPUT_FILE" user_answer
+  a1=$OUTPUT_FILE
+  a2=user_answer
+
+  if diff -q "$a1" "$a2" &>/dev/null; then
+    echo -e "diff \"$a1\" \"$a2\" # files match"
+    echo "Files match exactly"
+    continue
+  fi
+  if diff -q -b "$a1" "$a2" &>/dev/null; then
+    echo -e "diff -c -b \"$a1\" \"$a2\" # files match"
+    echo -e "diff -c \"$a1\" \"$a2\" # files dont match - see output"
+    diff -c "$a1" "$a2"
+    echo "Files match with differences in the amount of white spaces"
+    break
+  fi
+  if diff -q -b -B "$a1" "$a2" &>/dev/null; then
+    echo -e "diff -c -b -B \"$a1\" \"$a2\" # files match"
+    echo -e "diff -c -b \"$a1\" \"$a2\" # files dont match - see output"
+    diff -c -b "$a1" "$a2"
+    echo "Files match with differences in the amount of white spaces and blank lines"
+    break
+  fi
+  if diff -q -i -b -B "$a1" "$a2" &>/dev/null; then
+    echo -e "diff -c -i -b -B \"$a1\" \"$a2\" # files match"
+    echo -e "diff -c -b -B \"$a1\" \"$a2\" # files dont match - see output"
+    diff -c -b -B "$a1" "$a2"
+    echo "Files match if we ignore case and differences in the amount of white spaces and blank lines"
+    break
+  fi
+  if diff -q -b -B -w "$a1" "$a2" &>/dev/null; then
+    echo -e "diff -c -b -B -w \"$a1\" \"$a2\" # files match"
+    echo -e "diff -c -i -b -B \"$a1\" \"$a2\" # files dont match - see output"
+    diff -c -i -b -B "$a1" "$a2"
+    echo "Files match if we discard all white spaces"
+    break
+  fi
+  if diff -q -i -b -B -w "$a1" "$a2" &>/dev/null; then
+    echo -e "diff -c -i -b -B -w \"$a1\" \"$a2\" # files match"
+    echo -e "diff -c -b -B -w \"$a1\" \"$a2\" # files dont match - see output"
+    diff -c -b -B -w "$a1" "$a2"
+    echo "Files match if we ignore case and discard all white spaces"
+    break
+  fi
+  wd=$(which wdiff)
+  if [ "$wd" != "" ]; then
+    if wdiff \"$a1\" \"$a2\" &>/dev/null; then
+      echo -e "wdiff \"$a1\" \"$a2\" # files match"
+      echo -e "diff -c -i -b -B -w \"$a1\" \"$a2\" # files dont match - see output" 
+      diff -c -i -b -B -w "$a1" "$a2"
+      echo "BUT Files match if we compare word by word, ignoring everything else, using wdiff"
+      echo "diff has a bug that, if a line contains a single space, this is not discarded by -w"
       break
     fi
-    diff $OUTPUT_FILE user_answer
-    a1=$OUTPUT_FILE
-    a2=user_answer
-    
-    diff -q "$a1" "$a2" >/dev/null 2>/dev/null
-    if [ "$?" == "0" ]; then
-        echo -e "diff \"$a1\" \"$a2\" # files match"
-        echo "Files match exactly"
-        continue
-    fi
-    diff -q -b "$a1" "$a2" >/dev/null 2>/dev/null
-    if [ "$?" == "0" ]; then
-        echo -e "diff -c -b \"$a1\" \"$a2\" # files match"
-        echo -e "diff -c \"$a1\" \"$a2\" # files dont match - see output"
-        diff -c "$a1" "$a2"
-        echo "Files match with differences in the amount of white spaces"
-        break
-    fi
-    diff -q -b -B "$a1" "$a2" >/dev/null 2>/dev/null
-    if [ "$?" == "0" ]; then
-        echo -e "diff -c -b -B \"$a1\" \"$a2\" # files match"
-        echo -e "diff -c -b \"$a1\" \"$a2\" # files dont match - see output"
-        diff -c -b "$a1" "$a2"
-        echo "Files match with differences in the amount of white spaces and blank lines"
-        break
-    fi
-    diff -q -i -b -B "$a1" "$a2" >/dev/null 2>/dev/null
-    if [ "$?" == "0" ]; then
-        echo -e "diff -c -i -b -B \"$a1\" \"$a2\" # files match"
-        echo -e "diff -c -b -B \"$a1\" \"$a2\" # files dont match - see output"
-        diff -c -b -B "$a1" "$a2"
-        echo "Files match if we ignore case and differences in the amount of white spaces and blank lines"
-        break
-    fi
-    diff -q -b -B -w "$a1" "$a2" >/dev/null 2>/dev/null
-    if [ "$?" == "0" ]; then
-        echo -e "diff -c -b -B -w \"$a1\" \"$a2\" # files match"
-        echo -e "diff -c -i -b -B \"$a1\" \"$a2\" # files dont match - see output"
-        diff -c -i -b -B "$a1" "$a2"
-        echo "Files match if we discard all white spaces"
-        break
-    fi
-    diff -q -i -b -B -w "$a1" "$a2" >/dev/null 2>/dev/null
-    if [ "$?" == "0" ]; then
-        echo -e "diff -c -i -b -B -w \"$a1\" \"$a2\" # files match"
-        echo -e "diff -c -b -B -w \"$a1\" \"$a2\" # files dont match - see output"
-        diff -c -b -B -w "$a1" "$a2"
-        echo "Files match if we ignore case and discard all white spaces"
-        break
-    fi
-    wd=`which wdiff`
-    if [ "$wd" != "" ]; then
-        wdiff \"$a1\" \"$a2\" >/dev/null 2>/dev/null
-        if [ "$?" == "0" ]; then
-          echo -e "wdiff \"$a1\" \"$a2\" # files match"
-          echo -e "diff -c -i -b -B -w \"$a1\" \"$a2\" # files dont match - see output" 
-          diff -c -i -b -B -w "$a1" "$a2"
-          echo "BUT Files match if we compare word by word, ignoring everything else, using wdiff"
-          echo "diff has a bug that, if a line contains a single space, this is not discarded by -w"
-          break
-        fi
-    fi
-    echo -e "### files dont match - see output"
-    diff -c -i -b -B -w "$a1" "$a2"
-    echo "Differences found"
-    break
-  done
+  fi
+  echo -e "### files dont match - see output"
+  diff -c -i -b -B -w "$a1" "$a2"
+  echo "Differences found"
+  break
+done
 
 rm $PROBLEM_NAME.$EXT
 rm user_answer

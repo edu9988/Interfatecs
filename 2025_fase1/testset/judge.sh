@@ -53,11 +53,11 @@ PROBLEM_NAME=${BASENAME%%.*}         #removes extension from input file
 DOTS=${BASENAME//[^.]}
 DOTS_COUNT=${#DOTS}
 
-if [ $DOTS_COUNT -eq 0 ]; then
+if [ "$DOTS_COUNT" -eq 0 ]; then
   echo "$ARG_FILE: file extension not found" >&2
   echo "$ARG_FILE kept"
   exit 1
-elif [ $DOTS_COUNT -gt 1 ]; then
+elif [ "$DOTS_COUNT" -gt 1 ]; then
   echo "$ARG_FILE: multiple extensions not allowed" >&2
   echo "$ARG_FILE kept"
   exit 1
@@ -138,13 +138,21 @@ case $PROBLEM_NAME in
 esac
 
 if [ "$KEEP" = "false" ]; then
-  echo "WARNING: This will remove $ARG_FILE"
+  if [ "$BASENAME" = "$ARG_FILE" ]; then
+    echo "WARNING: This will remove $BASENAME"
+  else
+    echo "WARNING: This will remove $BASENAME ($ARG_FILE)"
+  fi
   mv "$ARG_FILE" "$TESTSET_PATH"/$PROBLEM_DIR
 elif [ "$KEEP" = "true" ]; then
-  echo "Keeping $ARG_FILE"
+  if [ "$BASENAME" = "$ARG_FILE" ]; then
+    echo "Keeping $BASENAME"
+  else
+    echo "Keeping $BASENAME ($ARG_FILE)"
+  fi
   cp "$ARG_FILE" "$TESTSET_PATH"/$PROBLEM_DIR
 fi
-cd "$TESTSET_PATH"/$PROBLEM_DIR
+cd "$TESTSET_PATH"/$PROBLEM_DIR || { rm "$TESTSET_PATH"/$PROBLEM_DIR/"$BASENAME"; exit 1; }
 echo "Judging problem $PROBLEM ($PROBLEM_NAME)..."
 
 case $EXT in
@@ -153,10 +161,10 @@ case $EXT in
     LANGUAGE=Haskell
     if command -v ghc &> /dev/null; then
       COMMAND=(./executable)
-      ghc $PROBLEM_NAME.hs -o executable -lm
+      ghc "$PROBLEM_NAME".hs -o executable -lm
     else
       echo "Error: ghc not installed" >&2
-      rm $PROBLEM_NAME.hs
+      rm "$PROBLEM_NAME".hs
       exit 1
     fi
   ;;
@@ -166,10 +174,10 @@ case $EXT in
     LANGUAGE=Java
     if command -v javac &> /dev/null; then
       COMMAND=(java "$PROBLEM_NAME")
-      javac $PROBLEM_NAME.java
+      javac "$PROBLEM_NAME".java
     else
       echo "Error: javac not installed" >&2
-      rm $PROBLEM_NAME.java
+      rm "$PROBLEM_NAME".java
       exit 1
     fi
   ;;
@@ -179,10 +187,10 @@ case $EXT in
     LANGUAGE=C++
     if command -v g++ &> /dev/null; then
       COMMAND=(./executable)
-      g++ $PROBLEM_NAME.cpp -o executable -lm
+      g++ "$PROBLEM_NAME".cpp -o executable -lm
     else
       echo "Error: g++ not installed" >&2
-      rm $PROBLEM_NAME.cpp
+      rm "$PROBLEM_NAME".cpp
       exit 1
     fi
   ;;
@@ -192,10 +200,10 @@ case $EXT in
     LANGUAGE=C
     if command -v g++ &> /dev/null; then
       COMMAND=(./executable)
-      gcc $PROBLEM_NAME.c -o executable -lm 
+      gcc "$PROBLEM_NAME".c -o executable -lm 
     else
       echo "Error: gcc not installed" >&2
-      rm $PROBLEM_NAME.c
+      rm "$PROBLEM_NAME".c
       exit 1
     fi
   ;;
@@ -203,15 +211,15 @@ case $EXT in
 	py)
 		echo "Running python pre-execution checks (this step is analogous to compilation)..."		
     LANGUAGE=Python
-    if command -v python3 &> /dev/null; then
+    if command -v python3 &> /dev/null && python3 -c "exit(0)"; then
       COMMAND=(python3 "$PROBLEM_NAME.py")
-      python3 -m py_compile $PROBLEM_NAME.py
+      python3 -m py_compile "$PROBLEM_NAME".py
     elif command -v python &> /dev/null; then
       COMMAND=(python "$PROBLEM_NAME.py")
-      python -m py_compile $PROBLEM_NAME.py
+      python -m py_compile "$PROBLEM_NAME".py
     else
       echo "Error: python not installed" >&2
-      rm $PROBLEM_NAME.py
+      rm "$PROBLEM_NAME".py
       exit 1
     fi
   ;;
@@ -221,17 +229,17 @@ case $EXT in
     LANGUAGE=Javascript
     if command -v node &> /dev/null; then
       COMMAND=(node "$PROBLEM_NAME.js")
-      node --check $PROBLEM_NAME.js
+      node --check "$PROBLEM_NAME".js
     else
       echo "Error: node not installed" >&2
-      rm $PROBLEM_NAME.js
+      rm "$PROBLEM_NAME".js
       exit 1
     fi
   ;;
 
 	*)
 		echo "$ARG_FILE: $EXT: unsupported file extension" >&2
-    rm $BASENAME
+    rm "$BASENAME"
     exit 1
 	;;
 esac
@@ -242,7 +250,7 @@ if [ $? -ne 0 ]; then
   if [ "$EXT" = "py" ]; then
     rm -rf __pycache__
   fi
-  rm $PROBLEM_NAME.$EXT
+  rm "$PROBLEM_NAME"."$EXT"
   exit 1
 fi
 
@@ -308,7 +316,7 @@ for INPUT_FILE in in/*; do
   fi
   wd=$(which wdiff)
   if [ "$wd" != "" ]; then
-    if wdiff \"$a1\" \"$a2\" &>/dev/null; then
+    if wdiff "$a1" "$a2" &>/dev/null; then
       echo -e "wdiff \"$a1\" \"$a2\" # files match"
       echo -e "diff -c -i -b -B -w \"$a1\" \"$a2\" # files dont match - see output" 
       diff -c -i -b -B -w "$a1" "$a2"
@@ -323,16 +331,16 @@ for INPUT_FILE in in/*; do
   break
 done
 
-rm $PROBLEM_NAME.$EXT
+rm "$PROBLEM_NAME"."$EXT"
 rm user_answer
 case $EXT in
 	hs)
-    rm -f $PROBLEM_NAME.hi
-    rm -f $PROBLEM_NAME.o
+    rm -f "$PROBLEM_NAME".hi
+    rm -f "$PROBLEM_NAME".o
     rm executable
   ;;
 	java)
-    rm $PROBLEM_NAME.class
+    rm "$PROBLEM_NAME".class
   ;;
 	c|cpp)
     rm executable

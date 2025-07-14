@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+#requires bash >= 5.0 (EPOCHREALTIME variable)
+
 unset PROBLEM
 unset PROBLEM_DIR
 unset PROBLEM_NAME
@@ -67,67 +69,67 @@ case $PROBLEM_NAME in
 	themayans) 
     PROBLEM=A
 		PROBLEM_DIR="a_themayans"
-		TIME_LIMIT=1
+		TIME_LIMIT=1.0
 	;;
 
 	scoreboard) 
     PROBLEM=B
 		PROBLEM_DIR="b_scoreboard"
-		TIME_LIMIT=1
+		TIME_LIMIT=1.0
 	;;
 	
 	agricultor) 
     PROBLEM=C
 		PROBLEM_DIR="c_agricultor"
-		TIME_LIMIT=1
+		TIME_LIMIT=1.0
 	;;
 
 	helicon) 
     PROBLEM=D
 		PROBLEM_DIR="d_helicon"
-		TIME_LIMIT=1
+		TIME_LIMIT=1.0
 	;;
 
 	triangulo) 
     PROBLEM=E
 		PROBLEM_DIR="e_triangulo"
-		TIME_LIMIT=1
+		TIME_LIMIT=1.0
 	;;
 
 	suprimentos) 
     PROBLEM=F
 		PROBLEM_DIR="f_suprimentos"
-		TIME_LIMIT=1
+		TIME_LIMIT=1.0
 	;;
 
 	base) 
     PROBLEM=G
 		PROBLEM_DIR="g_base"
-		TIME_LIMIT=1
+		TIME_LIMIT=1.0
 	;;
 
 	fatectok) 
     PROBLEM=H
 		PROBLEM_DIR="h_fatectok"
-		TIME_LIMIT=1
+		TIME_LIMIT=1.0
 	;;
 
 	anonnavai) 
     PROBLEM=I
 		PROBLEM_DIR="i_anonnavai"
-		TIME_LIMIT=1
+		TIME_LIMIT=1.0
 	;;
 
 	camisetas) 
     PROBLEM=J
 		PROBLEM_DIR="j_camisetas"
-		TIME_LIMIT=1
+		TIME_LIMIT=1.0
 	;;
 
 	fonte) 
     PROBLEM=K
 		PROBLEM_DIR="k_fonte"
-		TIME_LIMIT=1
+		TIME_LIMIT=1.0
 	;;
 
 	*)
@@ -214,7 +216,7 @@ case $EXT in
     if command -v python3 &> /dev/null && python3 -c "exit(0)"; then
       COMMAND=(python3 "$PROBLEM_NAME.py")
       python3 -m py_compile "$PROBLEM_NAME".py
-    elif command -v python &> /dev/null; then
+    elif command -v python &> /dev/null && python -c "exit(0)"; then
       COMMAND=(python "$PROBLEM_NAME.py")
       python -m py_compile "$PROBLEM_NAME".py
     else
@@ -261,71 +263,81 @@ echo "Executing in $LANGUAGE. Time limit: $TIME_LIMIT sec"
 for INPUT_FILE in in/*; do
   OUTPUT_FILE=${INPUT_FILE//in/out}
 
-  start=$(date +%s)
+  start=$EPOCHREALTIME
   "${COMMAND[@]}" < "$INPUT_FILE" > user_answer
-  end=$(date +%s)
+  end=$EPOCHREALTIME
 
-  runtime=$((end-start))
-  if [ $TIME_LIMIT -lt $runtime ]; then
-    echo "Time limit exceeded: $runtime sec"
+  runtime=$(echo "${end/,/.} - ${start/,/.}" | bc -l)
+  fastenough=$(echo "$runtime <= $TIME_LIMIT" | bc -l)
+  if [ "$fastenough" -eq 0 ]; then # 0 means false
+    echo "$TESTSET_PATH/$PROBLEM_DIR/$INPUT_FILE: Time limit exceeded: $runtime sec"
     break
   fi
-  diff --strip-trailing-cr "$OUTPUT_FILE" user_answer
   a1=$OUTPUT_FILE
   a2=user_answer
+  b1="$TESTSET_PATH/$PROBLEM_DIR/$OUTPUT_FILE"
 
   if diff --strip-trailing-cr -q "$a1" "$a2" &>/dev/null; then
-    echo -e "diff \"$a1\" \"$a2\" # files match"
-    echo "Files match exactly"
+    echo "diff \"$b1\" \"$a2\": files match exactly"
+    echo "Execution time: $runtime sec"
     continue
   fi
+  # -b ignores differences in the amount of white space
   if diff --strip-trailing-cr -q -b "$a1" "$a2" &>/dev/null; then
-    echo -e "diff -c -b \"$a1\" \"$a2\" # files match"
-    echo -e "diff -c \"$a1\" \"$a2\" # files dont match - see output"
-    diff --strip-trailing-cr -c "$a1" "$a2"
+    echo "diff -u -b \"$b1\" \"$a2\": files match"
+    echo "diff -u \"$b1\" \"$a2\": files don't match - see output"
+    diff --strip-trailing-cr -u "$a1" "$a2"
     echo "Files match with differences in the amount of white spaces"
     break
   fi
+  # -B ignores differences where lines are all blank
   if diff --strip-trailing-cr -q -b -B "$a1" "$a2" &>/dev/null; then
-    echo -e "diff -c -b -B \"$a1\" \"$a2\" # files match"
-    echo -e "diff -c -b \"$a1\" \"$a2\" # files dont match - see output"
-    diff --strip-trailing-cr -c -b "$a1" "$a2"
+    echo "diff -u -b -B \"$b1\" \"$a2\": files match"
+    echo "diff -u -b \"$b1\" \"$a2\": files don't match - see output"
+    diff --strip-trailing-cr -u -b "$a1" "$a2"
     echo "Files match with differences in the amount of white spaces and blank lines"
     break
   fi
-  if diff --strip-trailing-cr -q -i -b -B "$a1" "$a2" &>/dev/null; then
-    echo -e "diff -c -i -b -B \"$a1\" \"$a2\" # files match"
-    echo -e "diff -c -b -B \"$a1\" \"$a2\" # files dont match - see output"
-    diff --strip-trailing-cr -c -b -B "$a1" "$a2"
-    echo "Files match if we ignore case and differences in the amount of white spaces and blank lines"
-    break
-  fi
+  # -w ignores all white space
   if diff --strip-trailing-cr -q -b -B -w "$a1" "$a2" &>/dev/null; then
-    echo -e "diff -c -b -B -w \"$a1\" \"$a2\" # files match"
-    echo -e "diff -c -i -b -B \"$a1\" \"$a2\" # files dont match - see output"
-    diff --strip-trailing-cr -c -i -b -B "$a1" "$a2"
+    echo "diff -u -b -B -w \"$b1\" \"$a2\": files match"
+    echo "diff -u -b -B \"$b1\" \"$a2\": files don't match - see output"
+    diff --strip-trailing-cr -u -b -B "$a1" "$a2"
     echo "Files match if we discard all white spaces"
     break
   fi
+  # -i ignores case differences
+  if diff --strip-trailing-cr -q -i "$a1" "$a2" &>/dev/null; then
+    echo "diff -u -i \"$b1\" \"$a2\": files match"
+    echo "diff -u -b -B -w \"$b1\" \"$a2\": files don't match - see output"
+    diff --strip-trailing-cr -u -b -B -w "$a1" "$a2"
+    echo "Files match if we ignore case differences"
+    break
+  fi
+  if diff --strip-trailing-cr -q -i -b -B "$a1" "$a2" &>/dev/null; then
+    echo "diff -u -i -b -B \"$b1\" \"$a2\": files match"
+    echo "diff -u -i \"$b1\" \"$a2\": files don't match, and"
+    echo "diff -u -b -B -w \"$b1\" \"$a2\": files don't match - see output"
+    diff --strip-trailing-cr -u -b -B -w "$a1" "$a2"
+    echo "Files match if we ignore case and differences in the amount of white spaces and blank lines"
+    break
+  fi
   if diff --strip-trailing-cr -q -i -b -B -w "$a1" "$a2" &>/dev/null; then
-    echo -e "diff -c -i -b -B -w \"$a1\" \"$a2\" # files match"
-    echo -e "diff -c -b -B -w \"$a1\" \"$a2\" # files dont match - see output"
-    diff --strip-trailing-cr -c -b -B -w "$a1" "$a2"
+    echo "diff -u -i -b -B -w \"$b1\" \"$a2\": files match"
+    echo "diff -u -b -B -w \"$b1\" \"$a2\": files don't match - see output"
+    diff --strip-trailing-cr -u -b -B -w "$a1" "$a2"
     echo "Files match if we ignore case and discard all white spaces"
     break
   fi
-  wd=$(which wdiff)
-  if [ "$wd" != "" ]; then
-    if wdiff "$a1" "$a2" &>/dev/null; then
-      echo -e "wdiff \"$a1\" \"$a2\" # files match"
-      echo -e "diff -c -i -b -B -w \"$a1\" \"$a2\" # files dont match - see output" 
-      diff -c -i -b -B -w "$a1" "$a2"
-      echo "BUT Files match if we compare word by word, ignoring everything else, using wdiff"
-      break
-    fi
+  if command -v wdiff &> /dev/null && wdiff "$a1" "$a2" &>/dev/null; then
+    echo "wdiff \"$b1\" \"$a2\": files match"
+    echo "BUT Files match only if we compare word by word, ignoring everything else, using wdiff"
+    echo "diff -u -i -b -B -w \"$b1\" \"$a2\": files don't match - see output" 
+    diff -u -i -b -B -w "$a1" "$a2"
+    break
   fi
-  echo -e "### files dont match - see output"
-  diff -c -i -b -B -w "$a1" "$a2"
+  echo "$b1, $a2: files don't match - see output"
+  diff --strip-trailing-cr -u -i -b -B -w "$a1" "$a2"
   echo "Differences found"
   break
 done

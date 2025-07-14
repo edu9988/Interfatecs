@@ -198,7 +198,7 @@ case $EXT in
 	c)
 		echo "Compiling in C..."		
     LANGUAGE=C
-    if command -v g++ &> /dev/null; then
+    if command -v gcc &> /dev/null; then
       COMMAND=(./executable)
       gcc "$PROBLEM_NAME".c -o executable -lm 
     else
@@ -270,47 +270,47 @@ for INPUT_FILE in in/*; do
     echo "Time limit exceeded: $runtime sec"
     break
   fi
-  diff "$OUTPUT_FILE" user_answer
+  diff --strip-trailing-cr "$OUTPUT_FILE" user_answer
   a1=$OUTPUT_FILE
   a2=user_answer
 
-  if diff -q "$a1" "$a2" &>/dev/null; then
+  if diff --strip-trailing-cr -q "$a1" "$a2" &>/dev/null; then
     echo -e "diff \"$a1\" \"$a2\" # files match"
     echo "Files match exactly"
     continue
   fi
-  if diff -q -b "$a1" "$a2" &>/dev/null; then
+  if diff --strip-trailing-cr -q -b "$a1" "$a2" &>/dev/null; then
     echo -e "diff -c -b \"$a1\" \"$a2\" # files match"
     echo -e "diff -c \"$a1\" \"$a2\" # files dont match - see output"
-    diff -c "$a1" "$a2"
+    diff --strip-trailing-cr -c "$a1" "$a2"
     echo "Files match with differences in the amount of white spaces"
     break
   fi
-  if diff -q -b -B "$a1" "$a2" &>/dev/null; then
+  if diff --strip-trailing-cr -q -b -B "$a1" "$a2" &>/dev/null; then
     echo -e "diff -c -b -B \"$a1\" \"$a2\" # files match"
     echo -e "diff -c -b \"$a1\" \"$a2\" # files dont match - see output"
-    diff -c -b "$a1" "$a2"
+    diff --strip-trailing-cr -c -b "$a1" "$a2"
     echo "Files match with differences in the amount of white spaces and blank lines"
     break
   fi
-  if diff -q -i -b -B "$a1" "$a2" &>/dev/null; then
+  if diff --strip-trailing-cr -q -i -b -B "$a1" "$a2" &>/dev/null; then
     echo -e "diff -c -i -b -B \"$a1\" \"$a2\" # files match"
     echo -e "diff -c -b -B \"$a1\" \"$a2\" # files dont match - see output"
-    diff -c -b -B "$a1" "$a2"
+    diff --strip-trailing-cr -c -b -B "$a1" "$a2"
     echo "Files match if we ignore case and differences in the amount of white spaces and blank lines"
     break
   fi
-  if diff -q -b -B -w "$a1" "$a2" &>/dev/null; then
+  if diff --strip-trailing-cr -q -b -B -w "$a1" "$a2" &>/dev/null; then
     echo -e "diff -c -b -B -w \"$a1\" \"$a2\" # files match"
     echo -e "diff -c -i -b -B \"$a1\" \"$a2\" # files dont match - see output"
-    diff -c -i -b -B "$a1" "$a2"
+    diff --strip-trailing-cr -c -i -b -B "$a1" "$a2"
     echo "Files match if we discard all white spaces"
     break
   fi
-  if diff -q -i -b -B -w "$a1" "$a2" &>/dev/null; then
+  if diff --strip-trailing-cr -q -i -b -B -w "$a1" "$a2" &>/dev/null; then
     echo -e "diff -c -i -b -B -w \"$a1\" \"$a2\" # files match"
     echo -e "diff -c -b -B -w \"$a1\" \"$a2\" # files dont match - see output"
-    diff -c -b -B -w "$a1" "$a2"
+    diff --strip-trailing-cr -c -b -B -w "$a1" "$a2"
     echo "Files match if we ignore case and discard all white spaces"
     break
   fi
@@ -321,7 +321,6 @@ for INPUT_FILE in in/*; do
       echo -e "diff -c -i -b -B -w \"$a1\" \"$a2\" # files dont match - see output" 
       diff -c -i -b -B -w "$a1" "$a2"
       echo "BUT Files match if we compare word by word, ignoring everything else, using wdiff"
-      echo "diff has a bug that, if a line contains a single space, this is not discarded by -w"
       break
     fi
   fi

@@ -139,6 +139,25 @@ case $PROBLEM_NAME in
 	;;
 esac
 
+DOTS=${TIME_LIMIT//[^.]}
+DOTS_COUNT=${#DOTS}
+if [ "$DOTS_COUNT" -eq 0 ]; then
+  TIME_LIMIT_NS=$((TIME_LIMIT*1000000000))
+else
+  TIME_LIMIT_L=${TIME_LIMIT%%.*} #integer part
+  TIME_LIMIT_R=${TIME_LIMIT##*.} #fractional part
+  FRACTIONAL_SIZE=${#TIME_LIMIT_R}
+  if [ "$FRACTIONAL_SIZE" -eq 0 ]; then
+    TIME_LIMIT_NS=$((TIME_LIMIT_L*1000000000))
+  else
+    FACTOR=1
+    for (( i=0; i<9-FRACTIONAL_SIZE; i++ )); do
+      FACTOR=$((FACTOR*10))
+    done
+    TIME_LIMIT_NS=$((TIME_LIMIT_L*1000000000 + 10#$TIME_LIMIT_R*FACTOR))
+  fi
+fi
+
 if [ "$KEEP" = "false" ]; then
   if [ "$BASENAME" = "$ARG_FILE" ]; then
     echo "WARNING: This will remove $BASENAME"
@@ -263,13 +282,14 @@ echo "Executing in $LANGUAGE. Time limit: $TIME_LIMIT sec"
 for INPUT_FILE in in/*; do
   OUTPUT_FILE=${INPUT_FILE//in/out}
 
-  start=$EPOCHREALTIME
+  start_ns=$(date +%s%N)
   "${COMMAND[@]}" < "$INPUT_FILE" > user_answer
-  end=$EPOCHREALTIME
+  end_ns=$(date +%s%N)
 
-  runtime=$(echo "${end/,/.} - ${start/,/.}" | bc -l)
-  fastenough=$(echo "$runtime <= $TIME_LIMIT" | bc -l)
-  if [ "$fastenough" -eq 0 ]; then # 0 means false
+  runtime_ns=$((end_ns - start_ns))
+  runtime=$(printf "%.3f" "$((10#${runtime_ns}))e-9")
+  runtime=${runtime/,/.}
+  if (( runtime_ns > TIME_LIMIT_NS )); then
     echo "$TESTSET_PATH/$PROBLEM_DIR/$INPUT_FILE: Time limit exceeded: $runtime sec"
     break
   fi

@@ -1,38 +1,20 @@
 #!/usr/bin/env bash
 
-#requires bash >= 5.0 (EPOCHREALTIME variable)
-
-unset PROBLEM
-unset PROBLEM_DIR
-unset PROBLEM_NAME
-unset EXT
-unset TIME_LIMIT
-unset INPUT_FILE
-unset OUTPUT_FILE
-unset LANGUAGE
-unset TESTSET_PATH
-unset BASENAME
-unset COMMAND
-unset KEEP
-unset ARG_FILE
-unset DOTS
-unset DOTS_COUNT
-
 if [ "$#" -eq "1" ]; then
   KEEP=false
   ARG_FILE=$1
 elif [ "$#" -eq "2" ]; then
   KEEP=true
-  if [ "$1" = "--keep" ]; then
+  if [ "$1" = "--keep" ] || [ "$1" = "-k" ]; then
     ARG_FILE=$2
-  elif [ "$2" = "--keep" ]; then
+  elif [ "$2" = "--keep" ] || [ "$2" = "-k" ]; then
     ARG_FILE=$1
   else
-    echo "Usage: $0 <file> [--keep]" >&2
+    echo "Usage: $0 <file> [-k|--keep]" >&2
     exit 1
   fi
 else
-  echo "Usage: $0 <file> [--keep]" >&2
+  echo "Usage: $0 <file> [-k|--keep]" >&2
   exit 1
 fi
 
@@ -182,6 +164,7 @@ case $EXT in
     LANGUAGE=Haskell
     if command -v ghc &> /dev/null; then
       COMMAND=(./executable)
+      CLEANUP=(executable "$PROBLEM_NAME".{o,hi})
       ghc "$PROBLEM_NAME".hs -o executable -lm
     else
       echo "Error: ghc not installed" >&2
@@ -195,6 +178,7 @@ case $EXT in
     LANGUAGE=Java
     if command -v javac &> /dev/null; then
       COMMAND=(java "$PROBLEM_NAME")
+      CLEANUP=("$PROBLEM_NAME".class)
       javac "$PROBLEM_NAME".java
     else
       echo "Error: javac not installed" >&2
@@ -208,6 +192,7 @@ case $EXT in
     LANGUAGE=C++
     if command -v g++ &> /dev/null; then
       COMMAND=(./executable)
+      CLEANUP=(executable)
       g++ "$PROBLEM_NAME".cpp -o executable -lm
     else
       echo "Error: g++ not installed" >&2
@@ -221,6 +206,7 @@ case $EXT in
     LANGUAGE=C
     if command -v gcc &> /dev/null; then
       COMMAND=(./executable)
+      CLEANUP=(executable)
       gcc "$PROBLEM_NAME".c -o executable -lm 
     else
       echo "Error: gcc not installed" >&2
@@ -234,6 +220,7 @@ case $EXT in
     LANGUAGE=Python
     if command -v python3 &> /dev/null && python3 -c "exit(0)"; then
       COMMAND=(python3 "$PROBLEM_NAME.py")
+      CLEANUP=(__pycache__)
       python3 -m py_compile "$PROBLEM_NAME".py
     elif command -v python &> /dev/null && python -c "exit(0)"; then
       COMMAND=(python "$PROBLEM_NAME.py")
@@ -250,6 +237,7 @@ case $EXT in
     LANGUAGE=Javascript
     if command -v node &> /dev/null; then
       COMMAND=(node "$PROBLEM_NAME.js")
+      CLEANUP=()
       node --check "$PROBLEM_NAME".js
     else
       echo "Error: node not installed" >&2
@@ -287,7 +275,7 @@ for INPUT_FILE in in/*; do
   end_ns=$(date +%s%N)
 
   runtime_ns=$((end_ns - start_ns))
-  runtime=$(printf "%.3f" "$((10#${runtime_ns}))e-9")
+  printf -v runtime "%.3f" "$((10#${runtime_ns}))e-9"
   runtime=${runtime/,/.}
   if (( runtime_ns > TIME_LIMIT_NS )); then
     echo "$TESTSET_PATH/$PROBLEM_DIR/$INPUT_FILE: Time limit exceeded: $runtime sec"
@@ -364,21 +352,6 @@ done
 
 rm "$PROBLEM_NAME"."$EXT"
 rm user_answer
-case $EXT in
-	hs)
-    rm -f "$PROBLEM_NAME".hi
-    rm -f "$PROBLEM_NAME".o
-    rm executable
-  ;;
-	java)
-    rm "$PROBLEM_NAME".class
-  ;;
-	c|cpp)
-    rm executable
-  ;;
-	py)
-    rm -rf __pycache__
-  ;;
-  js)
-  ;;
-esac
+for f in "${CLEANUP[@]}"; do
+  rm -rf "$f"
+done

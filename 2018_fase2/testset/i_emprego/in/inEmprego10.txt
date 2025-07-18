@@ -1,0 +1,4 @@
+Antonio 40
+Maria 20
+Pedro 35
+Paula 57

@@ -1,0 +1,2 @@
+maximo: 38208
+minimo: 16436

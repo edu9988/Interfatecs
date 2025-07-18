@@ -1,0 +1,21 @@
+usuario...: ana
+valor hash: 134221161
+------------------------------
+usuario...: andrecavalcante
+valor hash: 237023579
+------------------------------
+usuario...: bia
+valor hash: 149025149
+------------------------------
+usuario...: clara
+valor hash: 115025523
+------------------------------
+usuario...: duda
+valor hash: 163421943
+------------------------------
+usuario...: helena
+valor hash: 82223137
+------------------------------
+usuario...: zequinha
+valor hash: 2925335513
+------------------------------

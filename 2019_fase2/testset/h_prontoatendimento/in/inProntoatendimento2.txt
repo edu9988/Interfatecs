@@ -1,0 +1,10 @@
+10 AMARELO
+12 VERMELHO
+beep
+33 AZUL
+34 AMARELO
+beep
+beep
+51 VERDE
+beep
+beep

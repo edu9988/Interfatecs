@@ -1,0 +1,3 @@
+danette venceu: 5895
+silvio venceu: 6143
+empates: 13

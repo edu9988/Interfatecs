@@ -1,0 +1,10 @@
+1 VERMELHO
+2 LARANJA
+beep
+3 AMARELO
+4 LARANJA
+beep
+5 VERMELHO
+beep
+beep
+beep

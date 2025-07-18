@@ -1,0 +1,13 @@
+BiaCavalcante: acesso concedido
+BiaCavalcante: acesso negado
+AnaMaria: acesso concedido
+BiaCavalcante: acesso negado
+AnaMaria: acesso concedido
+BiaCavalcante: usuario bloqueado
+duda3: usuario inexistente
+duda2: acesso negado
+duda2: acesso concedido
+BiaCavalcante: usuario bloqueado
+duda2: acesso negado
+duda2: acesso negado
+duda2: acesso concedido

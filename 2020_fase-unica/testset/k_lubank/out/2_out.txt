@@ -1,0 +1,8 @@
+goku: acesso concedido
+bulma: acesso negado
+bulma: acesso concedido
+FreEza: acesso concedido
+FreEza: acesso negado
+FreEza: acesso negado
+FreEza: usuario bloqueado
+FreEza: usuario bloqueado

@@ -1,0 +1,16 @@
+Final dia 1
+  Sem Trocas
+Final dia 2
+  Trocas entre 1(3v) e 2(1v)
+  Trocas entre 1(3v) e 3(1v)
+  Trocas entre 2(1v) e 3(1v)
+Final dia 3
+  Trocas entre 1(1v) e 2(1v)
+  Trocas entre 1(1v) e 3(1v)
+  Trocas entre 2(1v) e 3(1v)
+Final dia 4
+  Trocas entre 1(2v) e 2(1v)
+  Trocas entre 1(2v) e 3(1v)
+  Trocas entre 2(1v) e 3(1v)
+Final dia 5
+  Sem Trocas

@@ -1,0 +1,128 @@
+Final dia 1
+  Sem Trocas
+Final dia 2
+  Trocas entre 4(1v) e 5(1v)
+Final dia 3
+  Trocas entre 1(1v) e 2(1v)
+  Trocas entre 1(1v) e 3(1v)
+  Trocas entre 2(1v) e 4(1v)
+  Trocas entre 3(1v) e 5(1v)
+Final dia 4
+  Trocas entre 1(1v) e 4(1v)
+  Trocas entre 1(1v) e 5(1v)
+  Trocas entre 2(1v) e 3(1v)
+Final dia 5
+  Trocas entre 2(1v) e 5(1v)
+  Trocas entre 3(1v) e 4(2v)
+  Trocas entre 3(1v) e 5(1v)
+Final dia 6
+  Trocas entre 1(1v) e 3(1v)
+  Trocas entre 1(1v) e 4(1v)
+Final dia 7
+  Trocas entre 1(2v) e 5(1v)
+  Trocas entre 2(1v) e 3(1v)
+  Trocas entre 2(1v) e 4(1v)
+  Trocas entre 2(1v) e 5(1v)
+  Trocas entre 3(1v) e 4(1v)
+  Trocas entre 3(1v) e 5(1v)
+  Trocas entre 4(1v) e 5(1v)
+Final dia 8
+  Trocas entre 1(1v) e 2(1v)
+Final dia 9
+  Trocas entre 1(1v) e 3(1v)
+  Trocas entre 1(1v) e 4(1v)
+  Trocas entre 1(1v) e 5(1v)
+  Trocas entre 2(1v) e 3(1v)
+Final dia 10
+  Trocas entre 1(1v) e 3(1v)
+  Trocas entre 4(1v) e 5(1v)
+Final dia 11
+  Trocas entre 1(1v) e 2(1v)
+  Trocas entre 2(1v) e 5(2v)
+Final dia 12
+  Trocas entre 1(1v) e 4(1v)
+  Trocas entre 1(1v) e 5(1v)
+  Trocas entre 2(1v) e 3(1v)
+  Trocas entre 2(1v) e 4(1v)
+  Trocas entre 3(2v) e 4(1v)
+  Trocas entre 3(1v) e 5(2v)
+Final dia 13
+  Trocas entre 2(1v) e 4(1v)
+  Trocas entre 2(1v) e 5(1v)
+  Trocas entre 4(1v) e 5(1v)
+Final dia 14
+  Trocas entre 1(1v) e 3(1v)
+  Trocas entre 1(1v) e 5(1v)
+  Trocas entre 2(1v) e 3(1v)
+  Trocas entre 3(1v) e 5(1v)
+Final dia 15
+  Trocas entre 1(1v) e 2(1v)
+  Trocas entre 2(1v) e 4(1v)
+  Trocas entre 3(1v) e 4(1v)
+  Trocas entre 4(1v) e 5(1v)
+Final dia 16
+  Trocas entre 1(1v) e 4(1v)
+  Trocas entre 2(1v) e 3(1v)
+Final dia 17
+  Trocas entre 1(1v) e 3(1v)
+  Trocas entre 3(1v) e 5(1v)
+Final dia 18
+  Trocas entre 1(1v) e 4(1v)
+  Trocas entre 2(1v) e 4(1v)
+  Trocas entre 2(2v) e 5(1v)
+  Trocas entre 4(1v) e 5(1v)
+Final dia 19
+  Trocas entre 1(2v) e 2(1v)
+  Trocas entre 1(1v) e 3(1v)
+  Trocas entre 1(2v) e 5(1v)
+  Trocas entre 2(2v) e 3(1v)
+  Trocas entre 2(1v) e 4(1v)
+Final dia 20
+  Trocas entre 3(1v) e 5(1v)
+Final dia 21
+  Trocas entre 1(1v) e 3(1v)
+  Trocas entre 1(1v) e 5(1v)
+  Trocas entre 3(1v) e 4(1v)
+  Trocas entre 4(1v) e 5(1v)
+Final dia 22
+  Trocas entre 2(1v) e 3(1v)
+  Trocas entre 2(1v) e 5(2v)
+  Trocas entre 3(1v) e 4(1v)
+Final dia 23
+  Trocas entre 1(1v) e 2(1v)
+  Trocas entre 1(1v) e 3(1v)
+  Trocas entre 1(1v) e 5(1v)
+  Trocas entre 2(1v) e 4(1v)
+  Trocas entre 3(1v) e 5(1v)
+Final dia 24
+  Trocas entre 1(2v) e 4(1v)
+  Trocas entre 2(1v) e 5(1v)
+  Trocas entre 4(1v) e 5(1v)
+Final dia 25
+  Trocas entre 1(1v) e 3(1v)
+  Trocas entre 1(1v) e 5(1v)
+  Trocas entre 2(1v) e 3(1v)
+  Trocas entre 2(1v) e 4(1v)
+  Trocas entre 3(1v) e 4(1v)
+  Trocas entre 3(1v) e 5(1v)
+Final dia 26
+  Sem Trocas
+Final dia 27
+  Trocas entre 1(1v) e 2(1v)
+  Trocas entre 1(1v) e 4(1v)
+  Trocas entre 1(1v) e 5(1v)
+  Trocas entre 2(1v) e 5(2v)
+Final dia 28
+  Trocas entre 2(1v) e 3(2v)
+  Trocas entre 3(1v) e 5(2v)
+  Trocas entre 4(2v) e 5(1v)
+Final dia 29
+  Trocas entre 1(1v) e 2(1v)
+  Trocas entre 1(1v) e 5(1v)
+  Trocas entre 2(1v) e 4(1v)
+  Trocas entre 2(1v) e 5(1v)
+Final dia 30
+  Trocas entre 1(1v) e 3(2v)
+  Trocas entre 1(1v) e 4(1v)
+  Trocas entre 3(2v) e 4(1v)
+  Trocas entre 3(1v) e 5(1v)

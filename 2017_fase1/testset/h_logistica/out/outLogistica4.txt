@@ -1,0 +1,9 @@
+Pallet 45 Container 23 Retirar 129 46
+Pallet 121 Container 11 TOPO
+Pallet 122 Container 12 TOPO
+Pallet 153 Container 50 Retirar 154
+Pallet 114 Container 48 Retirar 148 147 146 145
+Pallet 91 Container 1 TOPO
+Pallet 118 Container 6 TOPO
+Pallet 59 Container 30 Retirar 134 60
+Pallet 103 Container 37 TOPO

@@ -1,0 +1,7 @@
+Pallet 1 Container 1 Retirar 8 7 6 5 4 3 2
+Pallet 17 Container 3 Retirar 24 23 22 21 20 19 18
+Pallet 33 Container 5 Retirar 40 39 38 37 36 35 34
+Pallet 49 Container 7 Retirar 56 55 54 53 52 51 50
+Pallet 73 Container 10 Retirar 80 79 78 77 76 75 74
+Pallet 16 Container 2 TOPO
+Pallet 80 Container 10 TOPO

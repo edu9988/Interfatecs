@@ -1,0 +1,4 @@
+Pallet 3 Container 2 Retirar 6 4
+Pallet 5 Container 3 Retirar 8 7
+Pallet 6 Container 2 TOPO
+Pallet 9 Container 4 TOPO

@@ -1,0 +1,20 @@
+name: Check File Structure
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  structure-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run structure validation script
+        run: |
+          chmod +x ./scripts/validate_structure.bash
+          ./scripts/validate_structure.bash
+

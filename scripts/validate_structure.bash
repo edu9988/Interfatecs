@@ -275,6 +275,7 @@ validate_phase() {
 }
 
 for phase in */; do
+  [ "$phase" = "scripts/" ] && continue
   validate_phase "${phase%%/}"
 done
 

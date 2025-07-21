@@ -10,9 +10,9 @@ This repository contains yearly editions of our college's programming contest ([
   ```
 
 2. Run the judge script with your solution file:
-  ```bash
-  ./judge.sh mysolution.ext
-  ```
+  >```bash
+  >./judge.sh mysolution.ext
+  >```
   >**WARNING**: By default, this will delete `mysolution.ext` file. This is standard behavior in judging scripts, to prevent competitor's files from accumulating in the `testset` folder.
 >
 >Replace `mysolution` with the actual problem name and `ext` with actual extension (e.g., `themayans.cpp`, `triangulo.py`, etc.).

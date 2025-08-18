@@ -6,7 +6,7 @@ This repository contains yearly editions of our college's programming contest ([
 
 1. Navigate to the `testset` folder of the desired edition (optional):
   ```bash
-  cd YYYY-faseN/testset
+  cd YYYY_faseN/testset
   ```
 
 2. Run the judge script with your solution file:
@@ -47,4 +47,4 @@ This repository contains yearly editions of our college's programming contest ([
 
 ## Contributing
 
-Feel free to contribute by adding future editions, improving test coverage or fixing bugs. Please refer to [Contribution Guidelines](./CONTRIBUTING.md "CONTRIBUTING.md")
+Feel free to contribute by adding future editions, adding solutions, improving test coverage or fixing bugs. Please refer to [Contribution Guidelines](./CONTRIBUTING.md "CONTRIBUTING.md")

@@ -18,15 +18,45 @@ else
   exit 1
 fi
 
+declare -A problem_dirs
+problem_dirs=(
+[A]="a_pascal"
+[B]="b_vagas"
+[C]="c_ord"
+[D]="d_cadeado"
+[E]="e_filtragem"
+[F]="f_piscinas"
+[G]="g_naves"
+[H]="h_quadrado"
+[I]="i_vizinho"
+[J]="j_derivadas"
+[K]="k_gemeos"
+[L]="l_nihans"
+[M]="m_placas"
+[N]="n_saau"
+)
+
+TESTSET_LONGPATH=$(dirname "$(realpath "$0")")
+ARGFILE_LONGPATH=$(realpath "$ARG_FILE")
+
 if [ ! -e "$ARG_FILE" ]; then
   echo "$ARG_FILE: file not found" >&2
   exit 1
-elif [ ! -f "$ARG_FILE" ]; then
-  echo "$ARG_FILE: not a regular file" >&2
-  exit 1
-elif [ ! -r "$ARG_FILE" ]; then
-  echo "$ARG_FILE: permission denied" >&2
-  exit 1
+else
+  for dir in "${problem_dirs[@]}";do
+    if [[ "$ARGFILE_LONGPATH" == "$TESTSET_LONGPATH/$dir"/* ]]; then
+      echo "$ARG_FILE: $(dirname $ARG_FILE): don't place files in this folder or its subfolders" >&2
+      echo "$ARG_FILE kept"
+      exit 1
+    fi
+  done
+  if [ ! -f "$ARG_FILE" ]; then
+    echo "$ARG_FILE: not a regular file" >&2
+    exit 1
+  elif [ ! -r "$ARG_FILE" ]; then
+    echo "$ARG_FILE: permission denied" >&2
+    exit 1
+  fi
 fi
 
 TESTSET_PATH=$(dirname "$0")      #TESTSET_PATH=${0%%judge.sh}
@@ -50,85 +80,85 @@ fi
 case $PROBLEM_NAME in 
 	pascal) 
     PROBLEM=A
-		PROBLEM_DIR="a_pascal"
+		PROBLEM_DIR="${problem_dirs[A]}"
 		TIME_LIMIT=1.0
 	;;
 
 	vagas) 
     PROBLEM=B
-		PROBLEM_DIR="b_vagas"
+		PROBLEM_DIR="${problem_dirs[B]}"
 		TIME_LIMIT=1.0
 	;;
 	
 	ord) 
     PROBLEM=C
-		PROBLEM_DIR="c_ord"
+		PROBLEM_DIR="${problem_dirs[C]}"
 		TIME_LIMIT=1.0
 	;;
 
 	cadeado) 
     PROBLEM=D
-		PROBLEM_DIR="d_cadeado"
+		PROBLEM_DIR="${problem_dirs[D]}"
 		TIME_LIMIT=1.0
 	;;
 
 	filtragem) 
     PROBLEM=E
-		PROBLEM_DIR="e_filtragem"
+		PROBLEM_DIR="${problem_dirs[E]}"
 		TIME_LIMIT=1.0
 	;;
 
 	piscinas) 
     PROBLEM=F
-		PROBLEM_DIR="f_piscinas"
+		PROBLEM_DIR="${problem_dirs[F]}"
 		TIME_LIMIT=1.0
 	;;
 
 	naves) 
     PROBLEM=G
-		PROBLEM_DIR="g_naves"
+		PROBLEM_DIR="${problem_dirs[G]}"
 		TIME_LIMIT=1.0
 	;;
 
 	quadrado) 
     PROBLEM=H
-		PROBLEM_DIR="h_quadrado"
+		PROBLEM_DIR="${problem_dirs[H]}"
 		TIME_LIMIT=1.0
 	;;
 
 	vizinho) 
     PROBLEM=I
-		PROBLEM_DIR="i_vizinho"
+		PROBLEM_DIR="${problem_dirs[I]}"
 		TIME_LIMIT=1.0
 	;;
 
 	derivadas) 
     PROBLEM=J
-		PROBLEM_DIR="j_derivadas"
+		PROBLEM_DIR="${problem_dirs[J]}"
 		TIME_LIMIT=1.0
 	;;
 
 	gemeos) 
     PROBLEM=K
-		PROBLEM_DIR="k_gemeos"
+		PROBLEM_DIR="${problem_dirs[K]}"
 		TIME_LIMIT=1.0
 	;;
 
 	nihans) 
     PROBLEM=L
-		PROBLEM_DIR="l_nihans"
+		PROBLEM_DIR="${problem_dirs[L]}"
 		TIME_LIMIT=1.0
 	;;
 
 	placas) 
     PROBLEM=M
-		PROBLEM_DIR="m_placas"
+		PROBLEM_DIR="${problem_dirs[M]}"
 		TIME_LIMIT=1.0
 	;;
 
 	saau) 
     PROBLEM=N
-		PROBLEM_DIR="n_saau"
+		PROBLEM_DIR="${problem_dirs[N]}"
 		TIME_LIMIT=1.0
 	;;
 

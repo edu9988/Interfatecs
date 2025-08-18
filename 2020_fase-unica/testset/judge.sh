@@ -18,15 +18,30 @@ else
   exit 1
 fi
 
+declare -A problem_dirs
+problem_dirs=([A]="a_abbreviating" [B]="b_agrupamentos" [C]="c_sertanejo" [D]="d_chinelandia" [E]="e_fifo" [F]="f_escola" [G]="g_festa" [H]="h_quociente" [I]="i_reforma" [J]="j_acessibilidade" [K]="k_lubank")
+
+TESTSET_LONGPATH=$(dirname "$(realpath "$0")")
+ARGFILE_LONGPATH=$(realpath "$ARG_FILE")
+
 if [ ! -e "$ARG_FILE" ]; then
   echo "$ARG_FILE: file not found" >&2
   exit 1
-elif [ ! -f "$ARG_FILE" ]; then
-  echo "$ARG_FILE: not a regular file" >&2
-  exit 1
-elif [ ! -r "$ARG_FILE" ]; then
-  echo "$ARG_FILE: permission denied" >&2
-  exit 1
+else
+  for dir in "${problem_dirs[@]}";do
+    if [[ "$ARGFILE_LONGPATH" == "$TESTSET_LONGPATH/$dir"/* ]]; then
+      echo "$ARG_FILE: $(dirname $ARG_FILE): don't place files in this folder or its subfolders" >&2
+      echo "$ARG_FILE kept"
+      exit 1
+    fi
+  done
+  if [ ! -f "$ARG_FILE" ]; then
+    echo "$ARG_FILE: not a regular file" >&2
+    exit 1
+  elif [ ! -r "$ARG_FILE" ]; then
+    echo "$ARG_FILE: permission denied" >&2
+    exit 1
+  fi
 fi
 
 TESTSET_PATH=$(dirname "$0")      #TESTSET_PATH=${0%%judge.sh}
@@ -50,67 +65,67 @@ fi
 case $PROBLEM_NAME in 
 	abbreviating) 
     PROBLEM=A
-		PROBLEM_DIR="a_abbreviating"
+		PROBLEM_DIR="${problem_dirs[A]}"
 		TIME_LIMIT=1.0
 	;;
 
 	agrupamentos) 
     PROBLEM=B
-		PROBLEM_DIR="b_agrupamentos"
+		PROBLEM_DIR="${problem_dirs[B]}"
 		TIME_LIMIT=1.0
 	;;
 	
 	sertanejo) 
     PROBLEM=C
-		PROBLEM_DIR="c_sertanejo"
+		PROBLEM_DIR="${problem_dirs[C]}"
 		TIME_LIMIT=1.0
 	;;
 
 	chinelandia) 
     PROBLEM=D
-		PROBLEM_DIR="d_chinelandia"
+		PROBLEM_DIR="${problem_dirs[D]}"
 		TIME_LIMIT=1.0
 	;;
 
 	fifo) 
     PROBLEM=E
-		PROBLEM_DIR="e_fifo"
+		PROBLEM_DIR="${problem_dirs[E]}"
 		TIME_LIMIT=1.0
 	;;
 
 	escola) 
     PROBLEM=F
-		PROBLEM_DIR="f_escola"
+		PROBLEM_DIR="${problem_dirs[F]}"
 		TIME_LIMIT=1.0
 	;;
 
 	festa) 
     PROBLEM=G
-		PROBLEM_DIR="g_festa"
+		PROBLEM_DIR="${problem_dirs[G]}"
 		TIME_LIMIT=1.0
 	;;
 
 	quociente) 
     PROBLEM=H
-		PROBLEM_DIR="h_quociente"
+		PROBLEM_DIR="${problem_dirs[H]}"
 		TIME_LIMIT=1.0
 	;;
 
 	reforma) 
     PROBLEM=I
-		PROBLEM_DIR="i_reforma"
+		PROBLEM_DIR="${problem_dirs[I]}"
 		TIME_LIMIT=1.0
 	;;
 
 	acessibilidade) 
     PROBLEM=J
-		PROBLEM_DIR="j_acessibilidade"
+		PROBLEM_DIR="${problem_dirs[J]}"
 		TIME_LIMIT=1.0
 	;;
 
 	lubank) 
     PROBLEM=K
-		PROBLEM_DIR="k_lubank"
+		PROBLEM_DIR="${problem_dirs[K]}"
 		TIME_LIMIT=1.0
 	;;
 

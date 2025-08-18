@@ -18,15 +18,30 @@ else
   exit 1
 fi
 
+declare -A problem_dirs
+problem_dirs=([A]="a_arms" [B]="b_ip" [C]="c_crush" [D]="d_pacman" [E]="e_escala" [F]="f_letras" [G]="g_receita" [H]="h_gold" [I]="i_trem" [J]="j_treinamento")
+
+TESTSET_LONGPATH=$(dirname "$(realpath "$0")")
+ARGFILE_LONGPATH=$(realpath "$ARG_FILE")
+
 if [ ! -e "$ARG_FILE" ]; then
   echo "$ARG_FILE: file not found" >&2
   exit 1
-elif [ ! -f "$ARG_FILE" ]; then
-  echo "$ARG_FILE: not a regular file" >&2
-  exit 1
-elif [ ! -r "$ARG_FILE" ]; then
-  echo "$ARG_FILE: permission denied" >&2
-  exit 1
+else
+  for dir in "${problem_dirs[@]}";do
+    if [[ "$ARGFILE_LONGPATH" == "$TESTSET_LONGPATH/$dir"/* ]]; then
+      echo "$ARG_FILE: $(dirname $ARG_FILE): don't place files in this folder or its subfolders" >&2
+      echo "$ARG_FILE kept"
+      exit 1
+    fi
+  done
+  if [ ! -f "$ARG_FILE" ]; then
+    echo "$ARG_FILE: not a regular file" >&2
+    exit 1
+  elif [ ! -r "$ARG_FILE" ]; then
+    echo "$ARG_FILE: permission denied" >&2
+    exit 1
+  fi
 fi
 
 TESTSET_PATH=$(dirname "$0")      #TESTSET_PATH=${0%%judge.sh}
@@ -50,61 +65,61 @@ fi
 case $PROBLEM_NAME in 
 	arms) 
     PROBLEM=A
-		PROBLEM_DIR="a_arms"
+		PROBLEM_DIR="${problem_dirs[A]}"
 		TIME_LIMIT=1.0
 	;;
 
 	ip) 
     PROBLEM=B
-		PROBLEM_DIR="b_ip"
+		PROBLEM_DIR="${problem_dirs[B]}"
 		TIME_LIMIT=1.0
 	;;
 	
 	crush) 
     PROBLEM=C
-		PROBLEM_DIR="c_crush"
+		PROBLEM_DIR="${problem_dirs[C]}"
 		TIME_LIMIT=1.0
 	;;
 
 	pacman) 
     PROBLEM=D
-		PROBLEM_DIR="d_pacman"
+		PROBLEM_DIR="${problem_dirs[D]}"
 		TIME_LIMIT=1.0
 	;;
 
 	escala) 
     PROBLEM=E
-		PROBLEM_DIR="e_escala"
+		PROBLEM_DIR="${problem_dirs[E]}"
 		TIME_LIMIT=1.0
 	;;
 
 	letras) 
     PROBLEM=F
-		PROBLEM_DIR="f_letras"
+		PROBLEM_DIR="${problem_dirs[F]}"
 		TIME_LIMIT=1.0
 	;;
 
 	receita) 
     PROBLEM=G
-		PROBLEM_DIR="g_receita"
+		PROBLEM_DIR="${problem_dirs[G]}"
 		TIME_LIMIT=1.0
 	;;
 
 	gold) 
     PROBLEM=H
-		PROBLEM_DIR="h_gold"
+		PROBLEM_DIR="${problem_dirs[H]}"
 		TIME_LIMIT=1.0
 	;;
 
 	trem) 
     PROBLEM=I
-		PROBLEM_DIR="i_trem"
+		PROBLEM_DIR="${problem_dirs[I]}"
 		TIME_LIMIT=1.0
 	;;
 
 	treinamento) 
     PROBLEM=J
-		PROBLEM_DIR="j_treinamento"
+		PROBLEM_DIR="${problem_dirs[J]}"
 		TIME_LIMIT=1.0
 	;;
 

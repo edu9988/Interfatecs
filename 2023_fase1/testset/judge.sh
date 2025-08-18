@@ -18,15 +18,30 @@ else
   exit 1
 fi
 
+declare -A problem_dirs
+problem_dirs=([A]="a_blaittland" [B]="b_fifteenlove" [C]="c_piramide" [D]="d_argasd" [E]="e_crausio" [F]="f_spins" [G]="g_silas" [H]="h_radar" [I]="i_foraminis" [J]="j_palindromo" [K]="k_evento")
+
+TESTSET_LONGPATH=$(dirname "$(realpath "$0")")
+ARGFILE_LONGPATH=$(realpath "$ARG_FILE")
+
 if [ ! -e "$ARG_FILE" ]; then
   echo "$ARG_FILE: file not found" >&2
   exit 1
-elif [ ! -f "$ARG_FILE" ]; then
-  echo "$ARG_FILE: not a regular file" >&2
-  exit 1
-elif [ ! -r "$ARG_FILE" ]; then
-  echo "$ARG_FILE: permission denied" >&2
-  exit 1
+else
+  for dir in "${problem_dirs[@]}";do
+    if [[ "$ARGFILE_LONGPATH" == "$TESTSET_LONGPATH/$dir"/* ]]; then
+      echo "$ARG_FILE: $(dirname $ARG_FILE): don't place files in this folder or its subfolders" >&2
+      echo "$ARG_FILE kept"
+      exit 1
+    fi
+  done
+  if [ ! -f "$ARG_FILE" ]; then
+    echo "$ARG_FILE: not a regular file" >&2
+    exit 1
+  elif [ ! -r "$ARG_FILE" ]; then
+    echo "$ARG_FILE: permission denied" >&2
+    exit 1
+  fi
 fi
 
 TESTSET_PATH=$(dirname "$0")      #TESTSET_PATH=${0%%judge.sh}
@@ -50,67 +65,67 @@ fi
 case $PROBLEM_NAME in 
 	blaittland) 
     PROBLEM=A
-		PROBLEM_DIR="a_blaittland"
+		PROBLEM_DIR="${problem_dirs[A]}"
 		TIME_LIMIT=1.0
 	;;
 
 	fifteenlove) 
     PROBLEM=B
-		PROBLEM_DIR="b_fifteenlove"
+		PROBLEM_DIR="${problem_dirs[B]}"
 		TIME_LIMIT=1.0
 	;;
 	
 	piramide) 
     PROBLEM=C
-		PROBLEM_DIR="c_piramide"
+		PROBLEM_DIR="${problem_dirs[C]}"
 		TIME_LIMIT=1.0
 	;;
 
 	argasd) 
     PROBLEM=D
-		PROBLEM_DIR="d_argasd"
+		PROBLEM_DIR="${problem_dirs[D]}"
 		TIME_LIMIT=1.0
 	;;
 
 	crausio) 
     PROBLEM=E
-		PROBLEM_DIR="e_crausio"
+		PROBLEM_DIR="${problem_dirs[E]}"
 		TIME_LIMIT=1.0
 	;;
 
 	spins) 
     PROBLEM=F
-		PROBLEM_DIR="f_spins"
+		PROBLEM_DIR="${problem_dirs[F]}"
 		TIME_LIMIT=1.0
 	;;
 
 	silas) 
     PROBLEM=G
-		PROBLEM_DIR="g_silas"
+		PROBLEM_DIR="${problem_dirs[G]}"
 		TIME_LIMIT=1.0
 	;;
 
 	radar) 
     PROBLEM=H
-		PROBLEM_DIR="h_radar"
+		PROBLEM_DIR="${problem_dirs[H]}"
 		TIME_LIMIT=1.0
 	;;
 
 	foraminis) 
     PROBLEM=I
-		PROBLEM_DIR="i_foraminis"
+		PROBLEM_DIR="${problem_dirs[I]}"
 		TIME_LIMIT=1.0
 	;;
 
 	palindromo) 
     PROBLEM=J
-		PROBLEM_DIR="j_palindromo"
+		PROBLEM_DIR="${problem_dirs[J]}"
 		TIME_LIMIT=1.0
 	;;
 
 	evento) 
     PROBLEM=K
-		PROBLEM_DIR="k_evento"
+		PROBLEM_DIR="${problem_dirs[K]}"
 		TIME_LIMIT=1.0
 	;;
 

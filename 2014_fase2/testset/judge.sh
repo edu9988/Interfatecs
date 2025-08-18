@@ -18,15 +18,30 @@ else
   exit 1
 fi
 
+declare -A problem_dirs
+problem_dirs=([A]="a_ra" [B]="b_misseis" [C]="c_koch" [D]="d_robotica" [E]="e_espionagem" [F]="f_triang" [G]="g_pontos" [H]="h_resident" [I]="i_inteligencia" [J]="j_cegonha")
+
+TESTSET_LONGPATH=$(dirname "$(realpath "$0")")
+ARGFILE_LONGPATH=$(realpath "$ARG_FILE")
+
 if [ ! -e "$ARG_FILE" ]; then
   echo "$ARG_FILE: file not found" >&2
   exit 1
-elif [ ! -f "$ARG_FILE" ]; then
-  echo "$ARG_FILE: not a regular file" >&2
-  exit 1
-elif [ ! -r "$ARG_FILE" ]; then
-  echo "$ARG_FILE: permission denied" >&2
-  exit 1
+else
+  for dir in "${problem_dirs[@]}";do
+    if [[ "$ARGFILE_LONGPATH" == "$TESTSET_LONGPATH/$dir"/* ]]; then
+      echo "$ARG_FILE: $(dirname $ARG_FILE): don't place files in this folder or its subfolders" >&2
+      echo "$ARG_FILE kept"
+      exit 1
+    fi
+  done
+  if [ ! -f "$ARG_FILE" ]; then
+    echo "$ARG_FILE: not a regular file" >&2
+    exit 1
+  elif [ ! -r "$ARG_FILE" ]; then
+    echo "$ARG_FILE: permission denied" >&2
+    exit 1
+  fi
 fi
 
 TESTSET_PATH=$(dirname "$0")      #TESTSET_PATH=${0%%judge.sh}
@@ -50,61 +65,61 @@ fi
 case $PROBLEM_NAME in 
 	ra) 
     PROBLEM=A
-		PROBLEM_DIR="a_ra"
+		PROBLEM_DIR="${problem_dirs[A]}"
 		TIME_LIMIT=1.0
 	;;
 
 	misseis) 
     PROBLEM=B
-		PROBLEM_DIR="b_misseis"
+		PROBLEM_DIR="${problem_dirs[B]}"
 		TIME_LIMIT=1.0
 	;;
 	
 	koch) 
     PROBLEM=C
-		PROBLEM_DIR="c_koch"
+		PROBLEM_DIR="${problem_dirs[C]}"
 		TIME_LIMIT=1.0
 	;;
 
 	robotica) 
     PROBLEM=D
-		PROBLEM_DIR="d_robotica"
+		PROBLEM_DIR="${problem_dirs[D]}"
 		TIME_LIMIT=1.0
 	;;
 
 	espionagem) 
     PROBLEM=E
-		PROBLEM_DIR="e_espionagem"
+		PROBLEM_DIR="${problem_dirs[E]}"
 		TIME_LIMIT=1.0
 	;;
 
 	triang) 
     PROBLEM=F
-		PROBLEM_DIR="f_triang"
+		PROBLEM_DIR="${problem_dirs[F]}"
 		TIME_LIMIT=1.0
 	;;
 
 	pontos) 
     PROBLEM=G
-		PROBLEM_DIR="g_pontos"
+		PROBLEM_DIR="${problem_dirs[G]}"
 		TIME_LIMIT=1.0
 	;;
 
 	resident) 
     PROBLEM=H
-		PROBLEM_DIR="h_resident"
+		PROBLEM_DIR="${problem_dirs[H]}"
 		TIME_LIMIT=1.0
 	;;
 
 	inteligencia) 
     PROBLEM=I
-		PROBLEM_DIR="i_inteligencia"
+		PROBLEM_DIR="${problem_dirs[I]}"
 		TIME_LIMIT=1.0
 	;;
 
 	cegonha) 
     PROBLEM=J
-		PROBLEM_DIR="j_cegonha"
+		PROBLEM_DIR="${problem_dirs[J]}"
 		TIME_LIMIT=1.0
 	;;
 

@@ -18,15 +18,30 @@ else
   exit 1
 fi
 
+declare -A problem_dirs
+problem_dirs=([A]="a_parking" [B]="b_xuquisim" [C]="c_epidemia" [D]="d_taylor" [E]="e_celulas" [F]="f_lojinha" [G]="g_digitos" [H]="h_nakitomon" [I]="i_megabobagem" [J]="j_jogovida" [K]="k_bochas")
+
+TESTSET_LONGPATH=$(dirname "$(realpath "$0")")
+ARGFILE_LONGPATH=$(realpath "$ARG_FILE")
+
 if [ ! -e "$ARG_FILE" ]; then
   echo "$ARG_FILE: file not found" >&2
   exit 1
-elif [ ! -f "$ARG_FILE" ]; then
-  echo "$ARG_FILE: not a regular file" >&2
-  exit 1
-elif [ ! -r "$ARG_FILE" ]; then
-  echo "$ARG_FILE: permission denied" >&2
-  exit 1
+else
+  for dir in "${problem_dirs[@]}";do
+    if [[ "$ARGFILE_LONGPATH" == "$TESTSET_LONGPATH/$dir"/* ]]; then
+      echo "$ARG_FILE: $(dirname $ARG_FILE): don't place files in this folder or its subfolders" >&2
+      echo "$ARG_FILE kept"
+      exit 1
+    fi
+  done
+  if [ ! -f "$ARG_FILE" ]; then
+    echo "$ARG_FILE: not a regular file" >&2
+    exit 1
+  elif [ ! -r "$ARG_FILE" ]; then
+    echo "$ARG_FILE: permission denied" >&2
+    exit 1
+  fi
 fi
 
 TESTSET_PATH=$(dirname "$0")      #TESTSET_PATH=${0%%judge.sh}
@@ -50,67 +65,67 @@ fi
 case $PROBLEM_NAME in 
 	parking) 
     PROBLEM=A
-		PROBLEM_DIR="a_parking"
+		PROBLEM_DIR="${problem_dirs[A]}"
 		TIME_LIMIT=1.0
 	;;
 
 	xuquisim) 
     PROBLEM=B
-		PROBLEM_DIR="b_xuquisim"
+		PROBLEM_DIR="${problem_dirs[B]}"
 		TIME_LIMIT=1.0
 	;;
 	
 	epidemia) 
     PROBLEM=C
-		PROBLEM_DIR="c_epidemia"
+		PROBLEM_DIR="${problem_dirs[C]}"
 		TIME_LIMIT=1.0
 	;;
 
 	taylor) 
     PROBLEM=D
-		PROBLEM_DIR="d_taylor"
+		PROBLEM_DIR="${problem_dirs[D]}"
 		TIME_LIMIT=1.0
 	;;
 
 	celulas) 
     PROBLEM=E
-		PROBLEM_DIR="e_celulas"
+		PROBLEM_DIR="${problem_dirs[E]}"
 		TIME_LIMIT=1.0
 	;;
 
 	lojinha) 
     PROBLEM=F
-		PROBLEM_DIR="f_lojinha"
+		PROBLEM_DIR="${problem_dirs[F]}"
 		TIME_LIMIT=1.0
 	;;
 
 	digitos) 
     PROBLEM=G
-		PROBLEM_DIR="g_digitos"
+		PROBLEM_DIR="${problem_dirs[G]}"
 		TIME_LIMIT=1.0
 	;;
 
 	nakitomon) 
     PROBLEM=H
-		PROBLEM_DIR="h_nakitomon"
+		PROBLEM_DIR="${problem_dirs[H]}"
 		TIME_LIMIT=1.0
 	;;
 
 	megabobagem) 
     PROBLEM=I
-		PROBLEM_DIR="i_megabobagem"
+		PROBLEM_DIR="${problem_dirs[I]}"
 		TIME_LIMIT=1.0
 	;;
 
 	jogovida) 
     PROBLEM=J
-		PROBLEM_DIR="j_jogovida"
+		PROBLEM_DIR="${problem_dirs[J]}"
 		TIME_LIMIT=1.0
 	;;
 
 	bochas) 
     PROBLEM=K
-		PROBLEM_DIR="k_bochas"
+		PROBLEM_DIR="${problem_dirs[K]}"
 		TIME_LIMIT=1.0
 	;;
 

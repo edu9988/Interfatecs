@@ -18,15 +18,30 @@ else
   exit 1
 fi
 
+declare -A problem_dirs
+problem_dirs=([A]="a_moviesorseries" [B]="b_goldennumber" [C]="c_peraaitalidandoerrado" [D]="d_radioatividade" [E]="e_campeonato" [F]="f_interestelar" [G]="g_mega" [H]="h_cigarros" [I]="i_geom" [J]="j_chocolate" [K]="k_untwist")
+
+TESTSET_LONGPATH=$(dirname "$(realpath "$0")")
+ARGFILE_LONGPATH=$(realpath "$ARG_FILE")
+
 if [ ! -e "$ARG_FILE" ]; then
   echo "$ARG_FILE: file not found" >&2
   exit 1
-elif [ ! -f "$ARG_FILE" ]; then
-  echo "$ARG_FILE: not a regular file" >&2
-  exit 1
-elif [ ! -r "$ARG_FILE" ]; then
-  echo "$ARG_FILE: permission denied" >&2
-  exit 1
+else
+  for dir in "${problem_dirs[@]}";do
+    if [[ "$ARGFILE_LONGPATH" == "$TESTSET_LONGPATH/$dir"/* ]]; then
+      echo "$ARG_FILE: $(dirname $ARG_FILE): don't place files in this folder or its subfolders" >&2
+      echo "$ARG_FILE kept"
+      exit 1
+    fi
+  done
+  if [ ! -f "$ARG_FILE" ]; then
+    echo "$ARG_FILE: not a regular file" >&2
+    exit 1
+  elif [ ! -r "$ARG_FILE" ]; then
+    echo "$ARG_FILE: permission denied" >&2
+    exit 1
+  fi
 fi
 
 TESTSET_PATH=$(dirname "$0")      #TESTSET_PATH=${0%%judge.sh}
@@ -50,67 +65,67 @@ fi
 case $PROBLEM_NAME in 
 	moviesorseries) 
     PROBLEM=A
-		PROBLEM_DIR="a_moviesorseries"
+		PROBLEM_DIR="${problem_dirs[A]}"
 		TIME_LIMIT=1.0
 	;;
 
 	goldennumber) 
     PROBLEM=B
-		PROBLEM_DIR="b_goldennumber"
+		PROBLEM_DIR="${problem_dirs[B]}"
 		TIME_LIMIT=1.0
 	;;
 	
 	peraaitalidandoerrado) 
     PROBLEM=C
-		PROBLEM_DIR="c_peraaitalidandoerrado"
+		PROBLEM_DIR="${problem_dirs[C]}"
 		TIME_LIMIT=1.0
 	;;
 
 	radioatividade) 
     PROBLEM=D
-		PROBLEM_DIR="d_radioatividade"
+		PROBLEM_DIR="${problem_dirs[D]}"
 		TIME_LIMIT=1.0
 	;;
 
 	campeonato) 
     PROBLEM=E
-		PROBLEM_DIR="e_campeonato"
+		PROBLEM_DIR="${problem_dirs[E]}"
 		TIME_LIMIT=1.0
 	;;
 
 	interestelar) 
     PROBLEM=F
-		PROBLEM_DIR="f_interestelar"
+		PROBLEM_DIR="${problem_dirs[F]}"
 		TIME_LIMIT=1.0
 	;;
 
 	mega) 
     PROBLEM=G
-		PROBLEM_DIR="g_mega"
+		PROBLEM_DIR="${problem_dirs[G]}"
 		TIME_LIMIT=1.0
 	;;
 
 	cigarros) 
     PROBLEM=H
-		PROBLEM_DIR="h_cigarros"
+		PROBLEM_DIR="${problem_dirs[H]}"
 		TIME_LIMIT=1.0
 	;;
 
 	geom) 
     PROBLEM=I
-		PROBLEM_DIR="i_geom"
+		PROBLEM_DIR="${problem_dirs[I]}"
 		TIME_LIMIT=1.0
 	;;
 
 	chocolate) 
     PROBLEM=J
-		PROBLEM_DIR="j_chocolate"
+		PROBLEM_DIR="${problem_dirs[J]}"
 		TIME_LIMIT=1.0
 	;;
 
 	untwist) 
     PROBLEM=K
-		PROBLEM_DIR="k_untwist"
+		PROBLEM_DIR="${problem_dirs[K]}"
 		TIME_LIMIT=1.0
 	;;
 

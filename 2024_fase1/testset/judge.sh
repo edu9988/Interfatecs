@@ -18,15 +18,30 @@ else
   exit 1
 fi
 
+declare -A problem_dirs
+problem_dirs=([A]="a_mapacalor" [B]="b_teclado" [C]="c_calcetis" [D]="d_rotaciona" [E]="e_apoio" [F]="f_validaplaca" [G]="g_plantaoduvidas" [H]="h_pivo" [I]="i_linguica" [J]="j_purrinha" [K]="k_mentirinha" [L]="l_molecularscissors")
+
+TESTSET_LONGPATH=$(dirname "$(realpath "$0")")
+ARGFILE_LONGPATH=$(realpath "$ARG_FILE")
+
 if [ ! -e "$ARG_FILE" ]; then
   echo "$ARG_FILE: file not found" >&2
   exit 1
-elif [ ! -f "$ARG_FILE" ]; then
-  echo "$ARG_FILE: not a regular file" >&2
-  exit 1
-elif [ ! -r "$ARG_FILE" ]; then
-  echo "$ARG_FILE: permission denied" >&2
-  exit 1
+else
+  for dir in "${problem_dirs[@]}";do
+    if [[ "$ARGFILE_LONGPATH" == "$TESTSET_LONGPATH/$dir"/* ]]; then
+      echo "$ARG_FILE: $(dirname $ARG_FILE): don't place files in this folder or its subfolders" >&2
+      echo "$ARG_FILE kept"
+      exit 1
+    fi
+  done
+  if [ ! -f "$ARG_FILE" ]; then
+    echo "$ARG_FILE: not a regular file" >&2
+    exit 1
+  elif [ ! -r "$ARG_FILE" ]; then
+    echo "$ARG_FILE: permission denied" >&2
+    exit 1
+  fi
 fi
 
 TESTSET_PATH=$(dirname "$0")      #TESTSET_PATH=${0%%judge.sh}
@@ -50,73 +65,73 @@ fi
 case $PROBLEM_NAME in 
 	mapacalor) 
     PROBLEM=A
-		PROBLEM_DIR="a_mapacalor"
+		PROBLEM_DIR="${problem_dirs[A]}"
 		TIME_LIMIT=1.0
 	;;
 
 	teclado) 
     PROBLEM=B
-		PROBLEM_DIR="b_teclado"
+		PROBLEM_DIR="${problem_dirs[B]}"
 		TIME_LIMIT=1.0
 	;;
 	
 	calcetis) 
     PROBLEM=C
-		PROBLEM_DIR="c_calcetis"
+		PROBLEM_DIR="${problem_dirs[C]}"
 		TIME_LIMIT=1.0
 	;;
 
 	rotaciona) 
     PROBLEM=D
-		PROBLEM_DIR="d_rotaciona"
+		PROBLEM_DIR="${problem_dirs[D]}"
 		TIME_LIMIT=1.0
 	;;
 
 	apoio) 
     PROBLEM=E
-		PROBLEM_DIR="e_apoio"
+		PROBLEM_DIR="${problem_dirs[E]}"
 		TIME_LIMIT=1.0
 	;;
 
 	validaplaca) 
     PROBLEM=F
-		PROBLEM_DIR="f_validaplaca"
+		PROBLEM_DIR="${problem_dirs[F]}"
 		TIME_LIMIT=1.0
 	;;
 
 	plantaoduvidas) 
     PROBLEM=G
-		PROBLEM_DIR="g_plantaoduvidas"
+		PROBLEM_DIR="${problem_dirs[G]}"
 		TIME_LIMIT=1.0
 	;;
 
 	pivo) 
     PROBLEM=H
-		PROBLEM_DIR="h_pivo"
+		PROBLEM_DIR="${problem_dirs[H]}"
 		TIME_LIMIT=1.0
 	;;
 
 	linguica) 
     PROBLEM=I
-		PROBLEM_DIR="i_linguica"
+		PROBLEM_DIR="${problem_dirs[I]}"
 		TIME_LIMIT=1.0
 	;;
 
 	purrinha) 
     PROBLEM=J
-		PROBLEM_DIR="j_purrinha"
+		PROBLEM_DIR="${problem_dirs[J]}"
 		TIME_LIMIT=1.0
 	;;
 
 	mentirinha) 
     PROBLEM=K
-		PROBLEM_DIR="k_mentirinha"
+		PROBLEM_DIR="${problem_dirs[K]}"
 		TIME_LIMIT=1.0
 	;;
 
 	molecularscissors) 
     PROBLEM=L
-		PROBLEM_DIR="l_molecularscissors"
+		PROBLEM_DIR="${problem_dirs[L]}"
 		TIME_LIMIT=1.0
 	;;
 

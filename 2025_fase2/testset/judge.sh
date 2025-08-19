@@ -87,7 +87,7 @@ case $PROBLEM_NAME in
 		TIME_LIMIT=1.0
 	;;
 
-	cabecaovo) 
+	cabecadeovo) 
     PROBLEM=E
 		PROBLEM_DIR="${problem_dirs[E]}"
 		TIME_LIMIT=1.0

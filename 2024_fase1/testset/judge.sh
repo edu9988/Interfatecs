@@ -136,7 +136,7 @@ case $PROBLEM_NAME in
 	;;
 
 	*)
-		echo "$ARG_FILE: $PROBLEM_NAME: Wrong problem name"	>&2
+		echo -e "$ARG_FILE: $PROBLEM_NAME: \e[31mWrong problem name\e[0m"	>&2
     echo "$ARG_FILE kept"
 		exit 1
 	;;
@@ -276,7 +276,7 @@ esac
 
 if [ $? -ne 0 ]; then
   echo
-  echo "Compilation error"
+  echo -e "\e[31mCompilation error\e[0m"
   if [ "$EXT" = "py" ]; then
     rm -rf __pycache__
   fi
@@ -284,7 +284,7 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-echo "Compilation finished. Press enter to run..."
+echo -e "\e[32mCompilation finished\e[0m. Press enter to run..."
 read -r
 echo "Executing in $LANGUAGE. Time limit: $TIME_LIMIT sec"		
 
@@ -299,7 +299,7 @@ for INPUT_FILE in input/*; do
   printf -v runtime "%.3f" "$((10#${runtime_ns}))e-9"
   runtime=${runtime/,/.}
   if (( runtime_ns > TIME_LIMIT_NS )); then
-    echo "$TESTSET_PATH/$PROBLEM_DIR/$INPUT_FILE: Time limit exceeded: $runtime sec"
+    echo -e "\n$TESTSET_PATH/$PROBLEM_DIR/$INPUT_FILE: \e[31mTime limit exceeded: $runtime sec\e[0m"
     break
   fi
   a1=$OUTPUT_FILE
@@ -307,67 +307,68 @@ for INPUT_FILE in input/*; do
   b1="$TESTSET_PATH/$PROBLEM_DIR/$OUTPUT_FILE"
 
   if diff --strip-trailing-cr -q "$a1" "$a2" &>/dev/null; then
-    echo "diff \"$b1\" \"$a2\": files match exactly"
+    echo -e "\ndiff \"$b1\" \"$a2\": \e[32mfiles match exactly\e[0m"
     echo "Execution time: $runtime sec"
     continue
   fi
   # -b ignores differences in the amount of white space
   if diff --strip-trailing-cr -q -b "$a1" "$a2" &>/dev/null; then
-    echo "diff -u -b \"$b1\" \"$a2\": files match"
-    echo "diff -u \"$b1\" \"$a2\": files don't match - see output"
+    echo -e "\ndiff -u -b \"$b1\" \"$a2\": files match"
+    echo -e "diff -u \"$b1\" \"$a2\": \e[31mfiles don't match - see output\e[0m"
     diff --strip-trailing-cr -u "$a1" "$a2"
-    echo "Files match with differences in the amount of white spaces"
+    echo -e "\nFiles match with differences in the amount of white spaces"
     break
   fi
   # -B ignores differences where lines are all blank
   if diff --strip-trailing-cr -q -b -B "$a1" "$a2" &>/dev/null; then
-    echo "diff -u -b -B \"$b1\" \"$a2\": files match"
-    echo "diff -u -b \"$b1\" \"$a2\": files don't match - see output"
+    echo -e "\ndiff -u -b -B \"$b1\" \"$a2\": files match"
+    echo -e "diff -u -b \"$b1\" \"$a2\": \e[31mfiles don't match - see output\e[0m"
     diff --strip-trailing-cr -u -b "$a1" "$a2"
-    echo "Files match with differences in the amount of white spaces and blank lines"
+    echo -e "\nFiles match with differences in the amount of white spaces and blank lines"
     break
   fi
   # -w ignores all white space
   if diff --strip-trailing-cr -q -b -B -w "$a1" "$a2" &>/dev/null; then
-    echo "diff -u -b -B -w \"$b1\" \"$a2\": files match"
-    echo "diff -u -b -B \"$b1\" \"$a2\": files don't match - see output"
+    echo -e "\ndiff -u -b -B -w \"$b1\" \"$a2\": files match"
+    echo -e "diff -u -b -B \"$b1\" \"$a2\": \e[31mfiles don't match - see output\e[0m"
     diff --strip-trailing-cr -u -b -B "$a1" "$a2"
-    echo "Files match if we discard all white spaces"
+    echo -e "\nFiles match if we discard all white spaces"
     break
   fi
   # -i ignores case differences
   if diff --strip-trailing-cr -q -i "$a1" "$a2" &>/dev/null; then
-    echo "diff -u -i \"$b1\" \"$a2\": files match"
-    echo "diff -u -b -B -w \"$b1\" \"$a2\": files don't match - see output"
+    echo -e "\ndiff -u -i \"$b1\" \"$a2\": files match"
+    echo -e "diff -u -b -B -w \"$b1\" \"$a2\": \e[31mfiles don't match - see output\e[0m"
     diff --strip-trailing-cr -u -b -B -w "$a1" "$a2"
-    echo "Files match if we ignore case differences"
+    echo -e "\nFiles match if we ignore case differences"
     break
   fi
   if diff --strip-trailing-cr -q -i -b -B "$a1" "$a2" &>/dev/null; then
-    echo "diff -u -i -b -B \"$b1\" \"$a2\": files match"
-    echo "diff -u -i \"$b1\" \"$a2\": files don't match, and"
-    echo "diff -u -b -B -w \"$b1\" \"$a2\": files don't match - see output"
+    echo -e "\ndiff -u -i -b -B \"$b1\" \"$a2\": files match"
+    echo -e "diff -u -i \"$b1\" \"$a2\": \e[31mfiles don't match, and"
+    echo -e "diff -u -b -B -w \"$b1\" \"$a2\": \e[31mfiles don't match - see output\e[0m"
     diff --strip-trailing-cr -u -b -B -w "$a1" "$a2"
-    echo "Files match if we ignore case and differences in the amount of white spaces and blank lines"
+    echo -e "\nFiles match if we ignore case and differences in the amount of white spaces and blank lines"
     break
   fi
   if diff --strip-trailing-cr -q -i -b -B -w "$a1" "$a2" &>/dev/null; then
-    echo "diff -u -i -b -B -w \"$b1\" \"$a2\": files match"
-    echo "diff -u -b -B -w \"$b1\" \"$a2\": files don't match - see output"
+    echo -e "\ndiff -u -i -b -B -w \"$b1\" \"$a2\": files match"
+    echo -e "diff -u -b -B -w \"$b1\" \"$a2\": \e[31mfiles don't match - see output\e[0m"
     diff --strip-trailing-cr -u -b -B -w "$a1" "$a2"
-    echo "Files match if we ignore case and discard all white spaces"
+    echo -e "\nFiles match if we ignore case and discard all white spaces"
     break
   fi
   if command -v wdiff &> /dev/null && wdiff "$a1" "$a2" &>/dev/null; then
-    echo "wdiff \"$b1\" \"$a2\": files match"
+    echo -e "\nwdiff \"$b1\" \"$a2\": files match"
     echo "BUT Files match only if we compare word by word, ignoring everything else, using wdiff"
-    echo "diff -u -i -b -B -w \"$b1\" \"$a2\": files don't match - see output" 
+    echo -e "diff -u -i -b -B -w \"$b1\" \"$a2\": \e[31mfiles don't match - see output\e[0m" 
     diff -u -i -b -B -w "$a1" "$a2"
+    echo -e "\nDifferences found"
     break
   fi
-  echo "$b1, $a2: files don't match - see output"
+  echo -e "\n$b1, $a2: \e[31mfiles don't match - see output\e[0m"
   diff --strip-trailing-cr -u -i -b -B -w "$a1" "$a2"
-  echo "Differences found"
+  echo -e "\nDifferences found"
   break
 done
 

@@ -30,7 +30,7 @@ if [ ! -e "$ARG_FILE" ]; then
 else
   for dir in "${problem_dirs[@]}";do
     if [[ "$ARGFILE_LONGPATH" == "$TESTSET_LONGPATH/$dir"/* ]]; then
-      echo "$ARG_FILE: $(dirname $ARG_FILE): don't place files in this folder or its subfolders" >&2
+      echo "$ARG_FILE: $(dirname "$ARG_FILE"): don't place files in this folder or its subfolders" >&2
       echo "$ARG_FILE kept"
       exit 1
     fi
@@ -155,16 +155,16 @@ if [ "$KEEP" = "false" ]; then
   else
     echo "WARNING: This will remove $BASENAME ($ARG_FILE)"
   fi
-  mv "$ARG_FILE" "$TESTSET_PATH"/$PROBLEM_DIR
+  mv "$ARG_FILE" "$TESTSET_PATH/$PROBLEM_DIR"
 elif [ "$KEEP" = "true" ]; then
   if [ "$BASENAME" = "$ARG_FILE" ]; then
     echo "Keeping $BASENAME"
   else
     echo "Keeping $BASENAME ($ARG_FILE)"
   fi
-  cp "$ARG_FILE" "$TESTSET_PATH"/$PROBLEM_DIR
+  cp "$ARG_FILE" "$TESTSET_PATH/$PROBLEM_DIR"
 fi
-cd "$TESTSET_PATH"/$PROBLEM_DIR || { rm "$TESTSET_PATH"/$PROBLEM_DIR/"$BASENAME"; exit 1; }
+cd "$TESTSET_PATH/$PROBLEM_DIR" || { rm "$TESTSET_PATH/$PROBLEM_DIR/$BASENAME"; exit 1; }
 echo "Judging problem $PROBLEM ($PROBLEM_NAME)..."
 
 case $EXT in

@@ -19,7 +19,7 @@ else
 fi
 
 declare -A problem_dirs
-problem_dirs=([A]="a_lastplayer" [B]="b_jokenpo" [C]="c_cerco" [D]="d_estrada" [E]="e_cabecadeovo" [F]="f_numerohomer" [G]="g_pontes" [H]="h_mesada" [I]="i_cifracesar" [J]="j_sorvete" [K]="k_telesbornia" [L]="l_sequencia" [M]="m_scoreboard" [N]="n_cheque")
+problem_dirs=([A]="a_lastplayer" [B]="b_jokenpo" [C]="c_cerco" [D]="d_estrada" [E]="e_cabecadeovo" [F]="f_numerohomer" [G]="g_pontes" [H]="h_mesada" [I]="i_cifracesar" [J]="j_sorvete" [K]="k_telesbornia" [L]="l_sequencia" [M]="m_scoreboard" [N]="n_cheques")
 
 TESTSET_LONGPATH=$(dirname "$(realpath "$0")")
 ARGFILE_LONGPATH=$(realpath "$ARG_FILE")
@@ -141,7 +141,7 @@ case $PROBLEM_NAME in
 		TIME_LIMIT=1.0
 	;;
 
-	cheque) 
+	cheques) 
     PROBLEM=N
 		PROBLEM_DIR="${problem_dirs[N]}"
 		TIME_LIMIT=1.0

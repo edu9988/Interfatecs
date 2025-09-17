@@ -1,6 +1,7 @@
+//solution by prof. alex
 import java.util.*;
 
-public class sequencia_alex {
+public class sequencia{
     static String proximaLinha(String seq) {
         StringBuilder resultado = new StringBuilder();
         int count = 1;

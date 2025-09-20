@@ -1,6 +1,7 @@
+//solution by prof. alex
 import java.util.*;
 
-public class sorvete_alex {
+public class sorvete{
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 

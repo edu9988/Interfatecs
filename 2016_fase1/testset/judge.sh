@@ -187,8 +187,8 @@ case $EXT in
     LANGUAGE=Java
     if command -v javac &> /dev/null; then
       COMMAND=(java "$PROBLEM_NAME")
-      CLEANUP=("$PROBLEM_NAME".class)
       javac "$PROBLEM_NAME".java
+      CLEANUP=(*.class)
     else
       echo "Error: javac not installed" >&2
       rm "$PROBLEM_NAME".java

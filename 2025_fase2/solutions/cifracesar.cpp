@@ -1,3 +1,4 @@
+//solution by prof. alex
 #include <iostream>
 #include <string>
 #include <cctype>

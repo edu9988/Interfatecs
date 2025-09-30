@@ -1,3 +1,4 @@
+#solution by prof. banin
 Epsilon = 0.001
 N = int(input())
 while N != 0:

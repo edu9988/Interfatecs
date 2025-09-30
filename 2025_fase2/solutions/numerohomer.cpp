@@ -1,3 +1,4 @@
+//solution by prof. lucas
 #include <iostream>
 #include <iomanip>
 #include <cmath>

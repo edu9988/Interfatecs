@@ -1,3 +1,4 @@
+#solution by prof. banin
 cont1 = cont2 = 0
 m1, m2 = input().split()
 while m1 != '-' and m2 != '-':

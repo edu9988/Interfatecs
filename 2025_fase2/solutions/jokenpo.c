@@ -1,3 +1,4 @@
+//solution by prof. banin
 #include <stdio.h>
 #include <string.h>
 

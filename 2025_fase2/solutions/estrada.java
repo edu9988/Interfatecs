@@ -1,6 +1,7 @@
+//solution by prof. alex
 import java.util.*;
 
-public class estrada_alex {
+public class estrada{
     static class Edge {
         int to, w, p;
         Edge(int to, int w, int p) {

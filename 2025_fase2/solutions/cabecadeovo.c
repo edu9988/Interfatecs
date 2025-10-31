@@ -1,3 +1,4 @@
+//solution by prof. alex
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>

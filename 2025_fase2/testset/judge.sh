@@ -90,7 +90,7 @@ case $PROBLEM_NAME in
 	cabecadeovo) 
     PROBLEM=E
 		PROBLEM_DIR="${problem_dirs[E]}"
-		TIME_LIMIT=1.0
+		TIME_LIMIT=3.0
 	;;
 
 	numerohomer) 

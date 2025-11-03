@@ -62,11 +62,11 @@ process.stdin.on('data', (chunk) => {
 process.stdin.on('end', () => {
   const lines = input.trim().split('\n')
   //ignore 4th element
-  const [N, M, K] = lines[0].split(' ').filter(e => e !== '').map(e => parseInt(e))
-  const cypria = lines[1].split(' ').filter(e => e !== '').map(e => parseInt(e))
-  const [S, T] = lines[2].split(' ').filter(e => e !== '').map(e => parseInt(e))
+  const [N, M, K] = lines[0].split(/\s+/).map(Number)
+  const cypria = lines[1].split(/\s+/).map(Number)
+  const [S, T] = lines[2].split(/\s+/).map(Number)
 
-  const roads = lines.slice(3).map(l => l.split(' ').filter(e => e !== '').map(e => parseInt(e)))
+  const roads = lines.slice(3).map(l => l.split(/\s+/).map(Number))
 
   const cities = Array.from({length:N+1}, () => {
     const obj = {

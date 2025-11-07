@@ -167,7 +167,6 @@ case $EXT in
     LANGUAGE=Haskell
     if command -v ghc &> /dev/null; then
       COMMAND=(./executable)
-      CLEANUP=(executable "$PROBLEM_NAME".{o,hi})
       ghc "$PROBLEM_NAME".hs -o executable -lm
     else
       echo "Error: ghc not installed" >&2
@@ -182,7 +181,6 @@ case $EXT in
     if command -v javac &> /dev/null; then
       COMMAND=(java "$PROBLEM_NAME")
       javac "$PROBLEM_NAME".java
-      CLEANUP=(*.class)
     else
       echo "Error: javac not installed" >&2
       rm "$PROBLEM_NAME".java
@@ -195,7 +193,6 @@ case $EXT in
     LANGUAGE=C++
     if command -v g++ &> /dev/null; then
       COMMAND=(./executable)
-      CLEANUP=(executable)
       g++ "$PROBLEM_NAME".cpp -o executable -lm
     else
       echo "Error: g++ not installed" >&2
@@ -209,7 +206,6 @@ case $EXT in
     LANGUAGE=C
     if command -v gcc &> /dev/null; then
       COMMAND=(./executable)
-      CLEANUP=(executable)
       gcc "$PROBLEM_NAME".c -o executable -lm 
     else
       echo "Error: gcc not installed" >&2
@@ -223,7 +219,6 @@ case $EXT in
     LANGUAGE=Python
     if command -v python3 &> /dev/null && python3 -c "exit(0)"; then
       COMMAND=(python3 "$PROBLEM_NAME.py")
-      CLEANUP=(__pycache__)
       python3 -m py_compile "$PROBLEM_NAME".py
     elif command -v python &> /dev/null && python -c "exit(0)"; then
       COMMAND=(python "$PROBLEM_NAME.py")
@@ -240,7 +235,6 @@ case $EXT in
     LANGUAGE=Javascript
     if command -v node &> /dev/null; then
       COMMAND=(node "$PROBLEM_NAME.js")
-      CLEANUP=()
       node --check "$PROBLEM_NAME".js
     else
       echo "Error: node not installed" >&2
@@ -354,8 +348,6 @@ for INPUT_FILE in in/*; do
   break
 done
 
-rm "$PROBLEM_NAME"."$EXT"
-rm user_answer
-for f in "${CLEANUP[@]}"; do
-  rm -rf "$f"
-done
+rm "$PROBLEM_NAME"."$EXT" user_answer
+rm -rf *.class *.o *.hi executable
+rm -rf __pycache__
